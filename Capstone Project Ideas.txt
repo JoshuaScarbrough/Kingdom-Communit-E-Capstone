@@ -1,0 +1,12 @@
+Capstone Project Ideas
+Website / Application that helps you plan your day and serves as an accountability partner. (Updated)
+This application’s primary use allows users to create a user profile and insert their daily schedule in some sort of planner. Once the schedule is inserted the app will come up with a plan for them to ensure they take care of their daily responsibilities without neglecting their intimate time with God. 
+This site can API from websites like Bible Gateway, OpenBibleInfo, etc to help with the creation for devotionals and uplifting scriptures. This application helps users stay disciplined and on track with the goals for their day.
+
+Website / Application that connects local believers and offers opportunities for hangouts and fellowship. (Most Excited about this app)
+This application's primary use is to allow users to create a profile and insert their geographical location so that they can find other believers in a similar region. In finding believers they can plan and or inform others of hangouts, bible studies, and other fellowship opportunities. The ability for a user to quickly upload plans and a location so that it can quickly be dispersed out to people in the region helps grow the Christian community. There can also be an evangelistic and philanthropy side where believers can find people in need and team up to help them.
+This site can use geographical APIs like Google’s geocoding API to receive coordinates for potential fellowships. The site can also have a created API that lists local church times/bible study times so that they can be displayed on the site based on region. 
+
+Bible Games / Trivia 
+Jeopardy, Reading Comprehension, Complete that Scripture, guess the scripture and more!!! A game website that allows users to play multiple bible based games that helps them learn about the word of God.
+This website makes learning about the bible fun and interactive. Sometimes learning things is a lot easier when you have a game that can help ou remember it and this app solves that problem!

@@ -1,0 +1,16 @@
+Capstone 2 Project Proposal 
+
+Idea: Website / Application that connects local believers and offers opportunities for hangouts and fellowship.
+This application's primary use is to allow users to create a profile and insert their geographical location so that they can find other believers in a similar region. In finding believers, they can plan and or inform others of hangouts, bible studies, and other fellowship opportunities. The ability for a user to quickly upload plans and a location so that it can quickly be dispersed out to people in the region helps grow the Christian community. There can also be an evangelistic and philanthropic side where believers can find people in need and team up to help them.
+This site can use geographical APIs like Google’s geocoding API to receive coordinates for potential fellowships. The site can also have a created API that lists local church times/bible study times so that they can be displayed on the site based on region. 
+
+
+Project Proposal
+1. The tech stack that will be used for the final project is React and Node.
+2. The program will be an evenly focused full-stack application. 
+3. This will be a website
+4. The project will basically be another social media platform that connects Christians from across the world. Users will be able to create an account and log in. They can post their geographical location, and they can see how many other users are within a certain mile radius. They can follow and message other users. They can join groups and communicate with people nearby. 
+5. The target demographic is people of the Christian Faith. No specific age but of course people old enough to use technology.
+6. The data/type of data I would be using is mainly data on longitude and latitude coordinates. This data would be useful to be able to develop a radius for users to meet people of a similar location. 
+7. Some potential issues I could run into is getting the right API to be able to manage geographical locations. 
+8. Some functionality the app would include is a follow and message button for users to be able to connect with other users. Also a post button so that users can post to a local feed. 

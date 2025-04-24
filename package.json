@@ -1,0 +1,26 @@
+{
+  "name": "capstone-project-two-71e6ef16065f4daa82082837ffcc0762",
+  "version": "1.0.0",
+  "description": "We have broken down the Capstone Project into easy-to-follow steps. Each step of the capstone contains a link with instructions for that step. You may notice this secondCapstone follows a similar pattern to your first Capstone, however, there are key differences.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hatchways-community/capstone-project-two-71e6ef16065f4daa82082837ffcc0762.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hatchways-community/capstone-project-two-71e6ef16065f4daa82082837ffcc0762/issues"
+  },
+  "homepage": "https://github.com/hatchways-community/capstone-project-two-71e6ef16065f4daa82082837ffcc0762#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.14.1"
+  }
+}
