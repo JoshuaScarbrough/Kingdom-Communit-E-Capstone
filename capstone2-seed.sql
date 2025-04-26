@@ -1,15 +1,13 @@
 -- Creating users
 INSERT INTO users
     (username, 
-    firstName, 
-    lastName, 
     userAddress
     )
 VALUES
-    ('testUser', 'test', 'User', '123 test Street, Test City, AL'),
-    ('testUser2', 'test', 'User2', '213 test Street, Test City, AL'),
-    ('testUser3', 'test', 'User3', '312 test Street, Test City, AL'),
-    ('testUser4', 'test', 'User4', '321 test Street, Test City, AL');
+    ('testUser', '123 test Street, Test City, AL'),
+    ('testUser2', '213 test Street, Test City, AL'),
+    ('testUser3', '312 test Street, Test City, AL'),
+    ('testUser4', '321 test Street, Test City, AL');
 
 
 -- Sets followers / following relationship

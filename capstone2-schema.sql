@@ -1,10 +1,9 @@
 -- Users
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
-    username VARCHAR(15) UNIQUE NOT NULL,
+    username VARCHAR(20) UNIQUE NOT NULL,
     userPassword TEXT NOT NULL DEFAULT 'admin',
-    firstName TEXT NOT NULL,
-    lastName TEXT NOT NULL,
+    bio TEXT,
     userAddress TEXT,
     profilePictureURL TEXT DEFAULT 'https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg',
     coverPhotoURL TEXT DEFAULT 'https://biocare.net/wp-content/uploads/background1.jpg'
