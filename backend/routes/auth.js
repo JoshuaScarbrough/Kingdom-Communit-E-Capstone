@@ -3,7 +3,7 @@ const router = new express.Router();
 const db = require('../db.js')
 const { createToken } = require("../helpers/tokens")
 
-const User = require("../models/user");
+const User = require("../models/user.js");
 
 // Test route to be sure were locked in
 router.get('/', (req, res, next) => {

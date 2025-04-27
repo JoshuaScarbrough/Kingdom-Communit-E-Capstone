@@ -154,6 +154,27 @@ router.patch("/:id/updatePhotos", async function (req, res, next){
 
 })
 
+router.post('/:id/follow', async function followUser(req,res,next){ // followUser is the function that follows a user
+    try{
+        const { token } = req.body; // token is the token that is being used to follow a user
+        const data = jwt.verify(token, SECRET_KEY);  // data is the data that is being used to follow a user
+        const following_id = req.params.id; // following_id is the id of the user that is being followed
+
+        if(data){
+            const user = await db.query( // user is the user that is being followed
+                `SELECT id FROM users WHERE username = $1`, // select the id of the user that is being followed
+                [data.username] // select the id of the user that is being followed
+            )
+            const follower_id = user.rows[0].id; // follower_id is the id of the user that is following 
+
+            const result = await User.followUser(follower_id, following_id); // result is the result of the followUser Function 
+            return res.json({message: "Successfully followed user", result}); // return the result of the followUser Function
+        }
+    }catch (e){ // catch the error
+        return next(e); // return the error
+    }
+});
+
 
 
 module.exports = router;

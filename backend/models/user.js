@@ -133,11 +133,29 @@ class User {
         return post
     }
 
-    // Need an remove route 
+    // Need an remove route
+    static async removePost(post_id){
+        const results = await db.query(
+            `DELETE FROM posts WHERE id = $1`,
+            [post_id]
+        )
+        return results.rows[0]
+    }
+
 
     // Need a route to follow a user
+    static async followUser(follower_id, following_id){ // follower_id is the user that is following, following_id is the user that is being followed 
+        const results = await db.query( // insert the follower_id and following_id into the followers table
+            `INSERT INTO followers(follower_ID, following_ID)  -- follower_id is the user that is following, following_id is the user that is being followed 
+            VALUES ($1, $2) -- insert the follower_id and following_id into the followers table
+            RETURNING follower_ID, following_ID`, // return the follower_id and following_id
+            [follower_id, following_id] // insert the follower_id and following_id into the followers table
+        )
+        return results.rows[0] // return the follower_id and following_id
+    }
 
     // Need a route to create a post 
+
 
     // Need a route to create a urgentPost
 
