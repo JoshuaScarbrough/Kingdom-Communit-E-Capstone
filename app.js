@@ -7,10 +7,12 @@ app.use(express.json());
 // Adds all the routes
 const userRoutes = require('./routes/users');
 const userAuth = require('./routes/auth')
+const postEvents = require('./routes/postEvents')
 
 // app.use for all the routes
 app.use('/users', userRoutes);
 app.use('/auth', userAuth);
+app.use('/post', postEvents);
 
 
 // get request using the get verb
