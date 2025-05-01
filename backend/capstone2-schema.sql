@@ -19,13 +19,13 @@ CREATE TABLE followers(
 -- Posts (One to many relationship)
 CREATE TABLE posts(
     id SERIAL PRIMARY KEY,
-    user_ID INTEGER NOT NULL REFERENCES users(id),
+    user_ID INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     post TEXT NOT NULL,
     imageURL TEXT, 
     datePosted DATE DEFAULT CURRENT_DATE,
     timePosted TIME DEFAULT CURRENT_TIME,
-    numLikes INTEGER,
-    numComments INTEGER
+    numLikes INTEGER DEFAULT 0,
+    numComments INTEGER DEFAULT 0
 );
 
 -- User to posts liked relationship
@@ -37,26 +37,26 @@ CREATE TABLE postsLiked(
 
 CREATE TABLE urgentPosts(
     id SERIAL PRIMARY KEY,
-    user_ID INTEGER NOT NULL REFERENCES users(id),
+    user_ID INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     post TEXT NOT NULL,
     imageURL TEXT, 
     userLocation TEXT,
     datePosted DATE DEFAULT CURRENT_DATE,
     timePosted TIME DEFAULT CURRENT_TIME,
-    numComments INTEGER
+    numComments INTEGER DEFAULT 0
 );
 
 -- Events
 CREATE TABLE events(
     id SERIAL PRIMARY KEY,
-    user_ID INTEGER NOT NULL REFERENCES users(id),
+    user_ID INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     post TEXT NOT NULL,
     imageURL TEXT, 
     userLocation TEXT,
     datePosted DATE DEFAULT CURRENT_DATE,
     timePosted TIME DEFAULT CURRENT_TIME,
-    numLikes INTEGER,
-    numComments INTEGER
+    numLikes INTEGER DEFAULT 0,
+    numComments INTEGER DEFAULT 0
 );
 
 -- User to events liked relationship
@@ -90,7 +90,7 @@ CREATE TABLE comments(
     comment TEXT NOT NULL,
     datePosted DATE DEFAULT CURRENT_DATE,
     timePosted TIME DEFAULT CURRENT_TIME,
-    numComments INTEGER
+    numComments INTEGER DEFAULT 0
 );
 
 -- User to posts/events/message/comment liked relationship
@@ -111,4 +111,3 @@ CREATE TABLE comments(
 --     comment_ID INTEGER REFERENCES comments(id),
 --     PRIMARY KEY (event_ID, comment_ID)
 -- );
-

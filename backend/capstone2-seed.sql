@@ -34,9 +34,10 @@ INSERT INTO posts
     )
 VALUES
     (1, 'Post one', '04/14/25','11:15 AM'),
-    (2, 'Post two', '04/14/25','11:18 AM'),
-    (3, 'Post three', '04/14/25','11:15 AM'),
-    (4, 'Post four', '04/14/25','11:15 AM');
+    (1, 'Post two', '04/14/25', '11:15 AM'),
+    (2, 'Post three', '04/14/25','11:18 AM'),
+    (3, 'Post four', '04/14/25','11:15 AM'),
+    (4, 'Post five', '04/14/25','11:15 AM');
 
 
 
@@ -127,9 +128,9 @@ INSERT INTO comments
     datePosted, 
     timePosted)
 VALUES
-    (2,1, 'sample comment', '04/20/25', '10:11 AM'),
-    (3,1, 'sample comment', '04/20/25', '10:11 AM'),
-    (4,1, 'sample comment', '04/20/25', '10:11 AM');
+    (2,1, 'sample comment (One)', '04/20/25', '10:11 AM'),
+    (3,1, 'sample comment (Two)', '04/20/25', '10:11 AM'),
+    (4,2, 'sample comment', '04/20/25', '10:11 AM');
 
 -- Sample Event Comments
 INSERT INTO comments
@@ -139,6 +140,6 @@ INSERT INTO comments
     datePosted, 
     timePosted)
 VALUES
-    (1,2, 'sample comment', '04/20/25', '10:11 AM'),
-    (3,2, 'sample comment', '04/20/25', '10:11 AM'),
+    (1,1, 'sample comment (One)', '04/20/25', '10:11 AM'),
+    (3,1, 'sample comment (Two)', '04/20/25', '10:11 AM'),
     (4,2, 'sample comment', '04/20/25', '10:11 AM');
