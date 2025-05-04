@@ -1,5 +1,8 @@
 const db = require('../db.js');
-const User = require("../models/user");
+const User = require("./user.js");
+const Event = require("./events.js");
+const UrgentPost = require("./urgentPosts.js");
+const LatLon = require("./latLon.js")
 
 class Post {
 
@@ -17,7 +20,8 @@ class Post {
     static async likePost(user_id, post_id){
 
         // Selects user
-        const user = await User.get(user_id)
+        let user = await db.query(`SELECT * FROM users WHERE id = $1`, [user_id])
+        user = user.rows[0]
 
         // Selects the post
         const post = await Post.getPost(post_id);
@@ -35,7 +39,6 @@ class Post {
         if(like){
 
             postLikes = postLikes + 1;
-            console.log(postLikes)
  
             const updateLikes = await db.query(
                 `UPDATE posts SET numlikes = $1 WHERE id = $2`,
@@ -53,7 +56,8 @@ class Post {
     static async unlikePost(user_id, post_id){
 
         // Selects user
-        const user = await User.get(user_id)
+        let user = await db.query(`SELECT * FROM users WHERE id = $1`, [user_id])
+        user = user.rows[0]
 
         // Selects the post
         const post = await Post.getPost(post_id);
@@ -85,35 +89,38 @@ class Post {
 
         // Function to comment on a post in the Posts table
         static async addComment(user_id, post_id, comment){
+
             // Selects user
-            const user = await User.get(user_id)
+            let user = await db.query(`SELECT * FROM users WHERE id = $1`, [user_id])
+            user = user.rows[0]
     
             // Selects the post
             const post = await Post.getPost(post_id);
     
             // Selects post numLikes
-            let numComments = post.numComments
+            let numComments = post.numcomments
     
             // Creates a comment
             let insertComment = await db.query(
                 `INSERT INTO comments(user_id, post_id, comment)
-                VALUES($1, $2, $3) `,
+                VALUES($1, $2, $3)
+                RETURNING comment`,
                 [user.id, post.id, comment]
     
             )
-            insertComment;
+            insertComment = insertComment.rows[0]
+            console.log(insertComment)
     
             // If there is a comment it updates the number of comments on the post table
             if(insertComment){
                 numComments = numComments + 1;
     
                 const updateNumComments = await db.query(
-                    `UPDATE posts SET numcomments = $1 WHERE id = $2`, 
+                    `UPDATE posts SET numcomments = $1 WHERE id = $2 RETURNING numcomments`, 
                     [numComments, post.id]
                 )
-                updateNumComments;
     
-                return({message: "Commented on post"})
+                return({message: "Post has been commented on"})
     
             }
         }
@@ -140,14 +147,14 @@ class Post {
      // Function to get a specific post from the user and its comments from the Posts table
      static async getFullPost(post_id){
 
-        const event = await Post.getPost(post_id)
+        const post = await Post.getPost(post_id)
 
         const comments = await Post.getComments(post_id)
         const allComments = comments.comments
 
-        if(event){
+        if(post){
             const eventAndComments = {
-                event: event,
+                post: post,
                 comments: allComments
             }
 
@@ -177,6 +184,106 @@ class Post {
 
         return fullPost
     }
+
+    // Need to be able to get all posts and comments from every user
+    static async getAllFeedPosts(){
+
+        // Loop through all the Posts and pull out their ids
+        let allPostIds = await db.query(
+            `SELECT id FROM posts`
+        )
+        allPostIds = allPostIds.rows
+
+        // Loop through all the Posts and pull out their ids
+        let allEventIds = await db.query(
+            `SELECT id FROM events`
+        )
+        allEventIds = allEventIds.rows
+
+        // Loop through all the Posts and pull out their ids
+        let allUrgentPostIds = await db.query(
+            `SELECT id FROM posts`
+        )
+        allUrgentPostIds = allUrgentPostIds.rows
+
+        // Array of all ids for their respetive post type
+        const post_ids = allPostIds.map(post => post.id)
+        const event_ids = allEventIds.map(event => event.id)
+        const urgentPost_ids = allUrgentPostIds.map(urgentPost => urgentPost.id)
+
+        // Getting back the entire Post of all the respective post types 
+        const fullPost = await Promise.all(post_ids.map(async (id) => await Post.getFullPost(id)))
+        const fullEvent = await Promise.all(event_ids.map(async (id) => await Event.getFullEvent(id)))
+        const fullUrgentPost = await Promise.all(urgentPost_ids.map(async (id) => await UrgentPost.getFullUrgentPost(id)))
+
+        
+        const feed = {
+            fullPost: fullPost,
+            fullEvent: fullEvent,
+            fullUrgentPost: fullUrgentPost
+        }
+        return feed
+
+
+    }
+
+    static async getAllFollowingFeedPosts(user_id){
+
+        // Gets user from the database 
+        let user = await db.query(
+            `SELECT * FROM users WHERE id = $1`,
+            [user_id]
+        )
+        user = user.rows[0]
+
+        // Query string to select all the users a user is following
+        const results = await db.query(
+            `SELECT users.id 
+            FROM users 
+            JOIN followers ON users.id = followers.following_id
+            WHERE followers.follower_id = $1`,
+            [user.id]
+        )
+
+        const following = results.rows
+
+        const user_ids = following.map(user => user.id)
+
+        const fullPost = await Promise.all(user_ids.map(async (id) => await Post.getAllFullPosts(id)))
+        const fullEvent = await Promise.all(user_ids.map(async (id) => await Event.getAllFullEvents(id)))
+        const fullUrgentPost = await Promise.all(user_ids.map(async (id) => await UrgentPost.getAllFullUrgentPosts(id)))
+
+        const followingPosts = {
+            following_posts: fullPost,
+            following_events: fullEvent,
+            following_urgent_posts: fullUrgentPost
+        }
+        return followingPosts
+
+
+    }
+
+
+
+    /**
+     * Functionality to check all the events and their addresses at once
+     */
+
+    // let userCoordinates = await LatLon.userCoordinates(user_id)
+        // console.log(userCoordinates)
+
+        // let events_id = await db.query(
+        //     `SELECT id FROM events`
+        // )
+        // events_id = events_id.rows
+        
+        // const test = events_id.map(event => event.id)
+        // console.log(test)
+
+        // const allDistance = await Promise.all(test.map(async (id) => await LatLon.getEventDistance(user_id, id)))
+        // console.log(allDistance)
+
+
 }
 
 module.exports = Post

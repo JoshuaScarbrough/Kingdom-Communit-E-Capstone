@@ -4,10 +4,10 @@ const db = require('../db');
 const jwt = require("jsonwebtoken");
 
 const { SECRET_KEY } = require("../config");
-const Post = require("../models/posts");
+const Event = require('../models/events')
 
 router.get('/', async function (req, res, next){
-    res.send("The liked Post route is working")
+    res.send("The liked Events route is working")
 })
 
 router.get('/:id', async function (req, res, next){
@@ -24,18 +24,18 @@ router.get('/:id', async function (req, res, next){
             )
             user = user.rows[0]
 
-            let likedPostIds = await db.query(
-                `SELECT id from posts 
-                JOIN postsLiked ON posts.id = postsLiked.post_id
-                WHERE postsLiked.user_id = $1`,
+            let likedEventIds = await db.query(
+                `SELECT id from events 
+                JOIN eventsLiked ON events.id = eventsLiked.event_id
+                WHERE eventsLiked.event_id = $1`,
                 [user.id]
             )
-            likedPostIds = likedPostIds.rows
+            likedEventIds = likedEventIds.rows
 
-            const ids = likedPostIds.map(post => post.id)
-            const fullPost = await Promise.all(ids.map(async (id) => await Post.getFullPost(id)))
+            const ids = likedEventIds.map(post => post.id)
+            const fullPost = await Promise.all(ids.map(async (id) => await Event.getFullEvent(id)))
 
-            res.send({message: "All liked Posts", posts: fullPost  })
+            res.send({message: "All liked Events", posts: fullPost  })
         }
 
     }catch(e){

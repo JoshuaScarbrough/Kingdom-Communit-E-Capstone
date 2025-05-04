@@ -1,9 +1,10 @@
 const express = require('express');
 const router = new express.Router();
-const db = require('../db.js')
-const { createToken } = require("../helpers/tokens")
+const db = require('../db.js');
+const { createToken } = require("../helpers/tokens.js");
 
-const User = require("../models/user.js");
+const User = require("../models/user");
+const LatLon = require("../models/latLon.js");
 
 // Test route to be sure were locked in
 router.get('/', (req, res, next) => {
@@ -15,10 +16,18 @@ router.post("/register", async function (req, res, next){
 
     const {username, userPassword, userAddress} = req.body
     try{
-        const newUser = await User.register(username, userPassword, userAddress);
+
+        // Checks to make sure the address is valid
+        const coordinates = await LatLon.checkAddress(userAddress)
+        console.log(coordinates)
+
+        if(coordinates){
+
+            // Registers the user
+            const newUser = await User.register(username, userPassword, userAddress);
 
 
-         const extractedValues = newUser.row.replace(/[()]/g, "").split(',');
+            const extractedValues = newUser.row.replace(/[()]/g, "").split(',');
                 
                 let registeredUser = await db.query(
                     `SELECT id, username FROM users WHERE username = $1`,
@@ -30,6 +39,9 @@ router.post("/register", async function (req, res, next){
         // Token for User
         const token = createToken(registeredUser)
         res.status(201).json({message: 'User registered successfully', registeredUser, token});
+        }else{
+            return res.json({message: "Please enter a valid Address"})
+        }
 
     }catch (e){
         return next(e)

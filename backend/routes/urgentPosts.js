@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../db')
 const jwt = require("jsonwebtoken");
 
-const { createToken } = require("../helpers/tokens")
 const { SECRET_KEY } = require("../config");
 const User = require("../models/user");
 const UrgentPost = require("../models/urgentPosts")

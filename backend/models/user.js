@@ -1,10 +1,12 @@
 const db = require('../db.js');
-const Post = require('../models/posts.js')
-const UrgentPost = require('../models/urgentPosts.js');
-const Event = require('../models/events.js')
-
 const bcrypt = require("bcrypt");
+const axios = require('axios');
+const Post = require('../models/posts.js');
+const UrgentPost = require('../models/urgentPosts.js');
+const Event = require('../models/events.js');
+
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
+const {COORDINATE_API_KEY} = require("../config.js");
 
 
 // Setting the model for the User class
@@ -233,7 +235,29 @@ class User {
         )
         return results.rows[0] // return the follower_id and following_id
     }
+
+    // Attempt to get back coordinates from an user Address
+    static async getCoordinates(user_id){
+
+        const user = await User.get(user_id);
+        const userAddress = user.useraddress
+
+        let coordinatesReq = await axios.get(`https://geocode.maps.co/search?q=${userAddress}&api_key=${COORDINATE_API_KEY}`);
+        coordinatesReq = coordinatesReq.data[0]
+
+        const latitude = coordinatesReq.lat
+        const longitdue = coordinatesReq.lon
+
+        const userCoordinates = {
+            latitude: latitude,
+            longitdue: longitdue
+        }
+        
+        return userCoordinates
+
+    }
+
         
 }
 
-module.exports = User
+module.exports = User; 

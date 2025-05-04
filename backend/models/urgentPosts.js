@@ -77,7 +77,7 @@ static async getComments(post_id){
 
     if(post){
         const postAndComments = {
-            post: post,
+            UrgentPost: post,
             comments: allComments
         }
 

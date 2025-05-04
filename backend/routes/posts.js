@@ -7,7 +7,6 @@ const { createToken } = require("../helpers/tokens")
 const { SECRET_KEY } = require("../config");
 const User = require("../models/user");
 const Post = require("../models/posts");
-const Event = require("../models/events");
 
 /**
  * Everything for a post
@@ -170,116 +169,14 @@ router.post('/:id/commentPost', async function(req, res, next){
             const {post_id, comment} = req.body;
 
             let commentPost = await Post.addComment(data.id, post_id, comment);
-            commentPost = commentPost.rows;
+            console.log(commentPost)
             
-            return ({message: "Post has been commented on ", comment: commentPost})
+            return res.send({message: commentPost})
         }
 
     }catch(e){
         next (e)
     }
 })
-
-
-
-
-
-
-
-
-
-// Route to just see urgentPosts
-router.get('/:id/urgentPosts', async function (req, res, next){
-    const {token} = req.body;
-    const data = jwt.verify(token, SECRET_KEY);
-
-    try{
-
-        if(data){
-            
-            const allPosts = await User.getAllPosts(data.id)
-            const posts = allPosts.urgentPosts
-            return res.send(posts)
-
-        }
-
-    }catch (e){
-        next (e)
-    }
-})
-
-
-
-/**
- * Routes to create all types of posts
- */
-
-// Creates a Urgent post
-router.post('/:id/urgentpost', async function (req, res, next){
-    const {token} = req.body;
-    const data = jwt.verify(token, SECRET_KEY);
-
-    try{
-
-        if(data){
-
-            const {post, imageUrl, userLocation} = req.body
-            const newUrgentPost = await User.createUrgentPost(data.username, post, imageUrl, userLocation)
-            
-            const extractUrgentPost = newUrgentPost.row.replace(/[()]/g, "").split(',');
-
-            let currentPost = await db.query(
-                `SELECT post, imageURL, userLocation FROM urgentposts WHERE id = $1`,
-                [extractUrgentPost[0]]
-            )
-
-            currentPost = currentPost.rows[0]
-            res.status(201).json({message: 'Urgent Post created successfully', currentPost});
-
-        }
-
-
-    }catch (e){
-        next (e);
-    }
-})
-
-
-/**
- * Route to delete all the posts
- */
-
-// Delete a urgentPost
-router.delete('/:id/deleteUrgentPost', async function (req, res, next){
-    const {token} = req.body;
-    const data = jwt.verify(token, SECRET_KEY);
-
-    try{
-
-        if(data){
-
-            const {post_id} = req.body;
-
-            // Checks if post exsist
-            const posts = await db.query(`SELECT * FROM urgentPosts WHERE id = $1`, [post_id]);
-            if(posts){
-
-                const deletePost = await User.deleteUrgentPost(post_id, data.id)
-                res.status(200).json({message: 'Urgent Post deleted Sucessfully', deletePost})
-            }
-        }
-
-    }catch (e){
-        next (e)
-    }
-})
-
-
-/**
- * Route to comment on posts / urgent posts / and events
- */
-
-
-
 
 module.exports = router
