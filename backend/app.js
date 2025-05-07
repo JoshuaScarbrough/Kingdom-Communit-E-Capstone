@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require("cors")
 
 // Parse requests bodies for JSON
 app.use(express.json());
@@ -14,9 +15,12 @@ const followerFollowing = require('./routes/follower_following');
 const likedPosts = require('./routes/likedPosts');
 const likedEvents = require('./routes/likedEvents');
 const userFeed = require('./routes/usersFeed');
+const messaging = require('./routes/message');
 
 
 // app.use for all the routes
+app.use(cors());
+app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/auth', userAuth);
 app.use('/posts', posts);
@@ -25,7 +29,8 @@ app.use('/events', events);
 app.use('/follow', followerFollowing);
 app.use('/likedPosts', likedPosts);
 app.use('/likedEvents', likedEvents);
-app.use('/feed', userFeed)
+app.use('/feed', userFeed);
+app.use('/messaging', messaging);
 
 // get request using the get verb
 app.get('/', (req, res) => {
@@ -34,6 +39,6 @@ app.get('/', (req, res) => {
 })
 
 
-app.listen(3000, function () {
-    console.log('Server running on port 3000')
+app.listen(5000, function () {
+    console.log('Server running on port 5000')
 })

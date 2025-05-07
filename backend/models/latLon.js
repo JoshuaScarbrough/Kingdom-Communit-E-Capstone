@@ -17,6 +17,7 @@ class LatLon{
         if(!coordinatesReq){
             return undefined
         }else{
+            console.log("Coordinates are working")
             return true
         }
 

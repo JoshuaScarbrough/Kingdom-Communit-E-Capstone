@@ -16,6 +16,73 @@ class Post {
         return selectedPost
     }
 
+    static async setNumComments(post_id){
+
+        // Selects the post 
+        const post = await Post.getPost(post_id);
+
+        let postNumComments = post.numcomments
+
+        // Checks to see if their are comments in the database already for the comment
+        let commentCheck = await db.query(
+            `SELECT * FROM comments WHERE post_id = $1`, 
+            [post_id]
+        )
+        commentCheck = commentCheck.rows
+
+        if(postNumComments !== commentCheck.length){
+
+            for(let i=0; i< commentCheck.length; i++){
+                postNumComments ++
+            }
+    
+            const setNumComments = await db.query(
+                `Update posts 
+                SET numComments = $1
+                WHERE id = $2
+                RETURNING numComments`,
+                [postNumComments, post_id]
+    
+            )
+        }
+
+        return(postNumComments)
+        
+    }
+
+    static async setNumLikes(post_id){
+
+        // Selects the post 
+        const post = await Post.getPost(post_id);
+
+        let postNumLikes = post.numlikes
+
+        // Checks to see if their are comments in the database already for the comment
+        let likesCheck = await db.query(
+            `SELECT * FROM postsLiked WHERE post_id = $1`, 
+            [post_id]
+        )
+        likesCheck = likesCheck.rows
+
+        if(postNumLikes !== likesCheck.length){
+
+            for(let i=0; i< likesCheck.length; i++){
+                postNumLikes ++
+            }
+    
+            const setNumLikes = await db.query(
+                `Update posts 
+                SET numLikes = $1
+                WHERE id = $2
+                RETURNING numComments`,
+                [postNumLikes, post_id]
+    
+            )
+        }
+
+        return(postNumLikes)
+    }
+
     // Function to like a post from the Posts table
     static async likePost(user_id, post_id){
 
@@ -27,7 +94,7 @@ class Post {
         const post = await Post.getPost(post_id);
 
         // Selects post numLikes
-        let postLikes = post.numlikes
+        let numLikes = await Post.setNumLikes(post_id)
 
         // Likes the post
         const like = await db.query(
@@ -96,9 +163,9 @@ class Post {
     
             // Selects the post
             const post = await Post.getPost(post_id);
-    
-            // Selects post numLikes
-            let numComments = post.numcomments
+
+            // Sets post numComments
+            let numComments = await Post.setNumComments(post_id)
     
             // Creates a comment
             let insertComment = await db.query(
@@ -109,7 +176,6 @@ class Post {
     
             )
             insertComment = insertComment.rows[0]
-            console.log(insertComment)
     
             // If there is a comment it updates the number of comments on the post table
             if(insertComment){
@@ -131,9 +197,11 @@ class Post {
         // Selects the post
         const post = await Post.getPost(post_id);
 
+        const numComments = await Post.setNumComments(post_id)
+
         // Views post comments
         const comments = await db.query(
-            `SELECT user_id, comment, dateposted, timeposted, numcomments  
+            `SELECT id, user_id, comment, dateposted, timeposted  
             FROM comments 
             WHERE post_id = $1`,
             [post_id]
@@ -148,6 +216,10 @@ class Post {
      static async getFullPost(post_id){
 
         const post = await Post.getPost(post_id)
+
+        // Sets the NumLikes and NumComments
+        const numComments = await Post.setNumComments(post_id)
+        let numLikes = await Post.setNumLikes(post_id)
 
         const comments = await Post.getComments(post_id)
         const allComments = comments.comments
@@ -214,7 +286,7 @@ class Post {
         // Getting back the entire Post of all the respective post types 
         const fullPost = await Promise.all(post_ids.map(async (id) => await Post.getFullPost(id)))
         const fullEvent = await Promise.all(event_ids.map(async (id) => await Event.getFullEvent(id)))
-        const fullUrgentPost = await Promise.all(urgentPost_ids.map(async (id) => await UrgentPost.getFullUrgentPost(id)))
+        const fullUrgentPost = await Promise.all(urgentPost_ids.map(async (id) => await UrgentPost.getAllFullUrgentPosts(id)))
 
         
         const feed = {
@@ -262,27 +334,6 @@ class Post {
 
 
     }
-
-
-
-    /**
-     * Functionality to check all the events and their addresses at once
-     */
-
-    // let userCoordinates = await LatLon.userCoordinates(user_id)
-        // console.log(userCoordinates)
-
-        // let events_id = await db.query(
-        //     `SELECT id FROM events`
-        // )
-        // events_id = events_id.rows
-        
-        // const test = events_id.map(event => event.id)
-        // console.log(test)
-
-        // const allDistance = await Promise.all(test.map(async (id) => await LatLon.getEventDistance(user_id, id)))
-        // console.log(allDistance)
-
 
 }
 

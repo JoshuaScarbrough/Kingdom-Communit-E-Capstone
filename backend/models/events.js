@@ -13,6 +13,74 @@ class Event{
         return selectedPost
     }
 
+    static async setNumComments(event_id){
+
+        // Selects the post 
+        const event = await Event.getEvent(event_id);
+
+        let eventNumComments = event.numcomments
+
+        // Checks to see if their are comments in the database already for the comment
+        let commentCheck = await db.query(
+            `SELECT * FROM comments WHERE event_id = $1`, 
+            [event_id]
+        )
+        commentCheck = commentCheck.rows
+
+        if(eventNumComments !== commentCheck.length){
+
+            for(let i=0; i< commentCheck.length; i++){
+                eventNumComments ++
+            }
+    
+            const setNumComments = await db.query(
+                `Update events 
+                SET numComments = $1
+                WHERE id = $2
+                RETURNING numComments`,
+                [eventNumComments, event_id]
+    
+            )
+        }
+
+        return(eventNumComments)
+        
+    }
+
+    static async setNumLikes(event_id){
+
+        // Selects the post 
+        const event = await Event.getEvent(event_id);
+
+        let eventNumLikes = event.numlikes
+
+        // Checks to see if their are comments in the database already for the comment
+        let likesCheck = await db.query(
+            `SELECT * FROM eventsLiked WHERE event_id = $1`, 
+            [event_id]
+        )
+        likesCheck = likesCheck.rows
+
+        if(eventNumLikes !== likesCheck.length){
+
+            for(let i=0; i< likesCheck.length; i++){
+                eventNumLikes ++
+            }
+    
+            const setNumLikes = await db.query(
+                `Update events 
+                SET numLikes = $1
+                WHERE id = $2
+                RETURNING numComments`,
+                [eventNumLikes, event_id]
+    
+            )
+        }
+
+        return(eventNumLikes)
+
+    }
+
     // Function to like a Event
     static async likeEvent(user_id, event_id){
 
@@ -22,8 +90,8 @@ class Event{
         // Selects the post
         const event = await Event.getEvent(event_id);
 
-        // Selects post numLikes
-        let eventLikes = event.numlikes
+        // Selects event numLikes
+        let numLikes = await Event.setNumLikes(event_id)
 
         // Likes the event
         const like = await db.query(
@@ -35,7 +103,6 @@ class Event{
         if(like){
 
             eventLikes = eventLikes + 1;
-            console.log(eventLikes)
  
             const updateLikes = await db.query(
                 `UPDATE events SET numlikes = $1 WHERE id = $2`,
@@ -69,7 +136,6 @@ class Event{
 
         if(unlike){
             eventLikes = eventLikes - 1;
-            console.log(eventLikes)
 
             const updateLikes = await db.query(
                 `UPDATE events SET numlikes = $1 WHERE id = $2`,
@@ -91,8 +157,8 @@ class Event{
         // Selects the post
         const event = await Event.getEvent(event_id);
 
-        // Selects post numLikes
-        let numComments = event.numComments
+        // Selects post numCommens
+        let numComments = await Event.setNumComments(event_id)
 
         // Creates a comment
         let insertComment = await db.query(
@@ -124,9 +190,12 @@ class Event{
         // Selects the post
         const event = await Event.getEvent(event_id);
 
+        // Sets post numComments
+        let numComments = await Event.setNumComments(event_id)
+
         // Views post comments
         const comments = await db.query(
-            `SELECT user_id, comment, dateposted, timeposted, numcomments  
+            `SELECT user_id, comment, dateposted, timeposted  
             FROM comments 
             WHERE event_id = $1`,
             [event_id]
@@ -141,6 +210,10 @@ class Event{
     static async getFullEvent(event_id){
 
         const event = await Event.getEvent(event_id)
+
+        // Sets post numComments and NumLikes
+        let numComments = await Event.setNumComments(event_id)
+        let numLikes = await Event.setNumLikes(event_id)
 
         const comments = await Event.getComments(event_id)
         const allComments = comments.comments

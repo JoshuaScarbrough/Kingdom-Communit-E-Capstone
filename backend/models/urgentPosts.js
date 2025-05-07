@@ -10,7 +10,56 @@ static async getUrgentPost(post_id){
         [post_id]
     )
     selectedPost = selectedPost.rows[0]
-    return selectedPost
+
+    let realDiryDan 
+
+    if(selectedPost !== undefined ){
+
+        realDiryDan = selectedPost
+        console.log(realDiryDan)
+        return realDiryDan
+    }
+    else{
+        console.log(selectedPost)
+    }
+
+}
+
+static async setNumComments(post_id){
+
+    // Selects the post 
+    const post = await UrgentPost.getUrgentPost(post_id);
+    console.log(post)
+
+    let postNumComments = post.numcomments
+    console.log(postNumComments)
+
+    // Checks to see if their are comments in the database already for the comment
+    let commentCheck = await db.query(
+        `SELECT * FROM comments WHERE urgentPost_id = $1`, 
+        [post_id]
+    )
+    commentCheck = commentCheck.rows
+
+    if(postNumComments !== commentCheck.length){
+
+        for(let i=0; i< commentCheck.length; i++){
+            postNumComments ++
+        }
+
+        const setNumComments = await db.query(
+            `Update urgentPosts 
+            SET numComments = $1
+            WHERE id = $2
+            RETURNING numComments`,
+            [postNumComments, post_id]
+
+        )
+        console.log(setNumComments)
+    }
+
+    return(postNumComments)
+    
 }
 
 // Function to comment on a post in the UrgentPosts table
@@ -21,8 +70,8 @@ static async addComment(user_id, post_id, comment){
     // Selects the post
     const post = await UrgentPost.getUrgentPost(post_id);
 
-    // Selects post numLikes
-    let numComments = post.numComments
+    // Selects post numComments
+    let numComments = await UrgentPost.setNumComments(post_id)
 
     // Creates a comment
     let insertComment = await db.query(
@@ -31,7 +80,6 @@ static async addComment(user_id, post_id, comment){
         [user.id, post.id, comment]
 
     )
-    insertComment;
 
     // If there is a comment it updates the number of comments on the post table
     if(insertComment){
@@ -51,12 +99,9 @@ static async addComment(user_id, post_id, comment){
 // Function to see all the comments for a given event in the Events table
 static async getComments(post_id){
 
-    // Selects the post
-    const post = await UrgentPost.getUrgentPost(post_id);
-
     // Views post comments
     const comments = await db.query(
-        `SELECT user_id, comment, dateposted, timeposted, numcomments  
+        `SELECT user_id, comment, dateposted, timeposted 
         FROM comments 
         WHERE urgentPost_id = $1`,
         [post_id]
@@ -71,6 +116,9 @@ static async getComments(post_id){
  static async getFullUrgentPost(post_id){
 
     const post = await UrgentPost.getUrgentPost(post_id)
+
+    // Selects post numComments
+    let numComments = await UrgentPost.setNumComments(post_id)
 
     const comments = await UrgentPost.getComments(post_id)
     const allComments = comments.comments

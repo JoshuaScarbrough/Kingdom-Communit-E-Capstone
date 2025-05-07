@@ -51,6 +51,8 @@ router.get('/:id/specificPost', async function (req, res, next){
             const fullPost = await Post.getFullPost(post_id)
     
             return res.send(fullPost)
+
+            
         }
 
     }catch(e){

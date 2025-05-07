@@ -7,13 +7,17 @@ const Event = require('../models/events.js');
 
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
 const {COORDINATE_API_KEY} = require("../config.js");
-
+5
 
 // Setting the model for the User class
 class User {
 
     // Function to register a User (Used in auth Route)
     static async register(username, userPassword, userAddress){
+
+        console.log(username)
+        console.log(userPassword)
+        console.log(userAddress)
 
         // Makes sure there arent duplicate usernames being used in registration
         const duplicateCheck = await db.query(
@@ -25,6 +29,10 @@ class User {
 
         // Used to hash passwords for security
         const hashedPassword = await bcrypt.hash(userPassword, BCRYPT_WORK_FACTOR);
+
+        if(!hashedPassword){
+            console.log("Password didn't hash")
+        }
 
         // Inserts user into database
         const results = await db.query(
