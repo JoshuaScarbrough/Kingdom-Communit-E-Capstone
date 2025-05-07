@@ -12,35 +12,35 @@ import { Link, useNavigate } from "react-router-dom";
  */
 
 function RegisterForm(){
+
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        username:"",
-        userPassword:"",
-        userAddress:""
-    });
 
+    // This is the user peice of state that updates
+    const [user, setUser] = useState("");
 
-    /** Handle form submit:
-    *
-    * Calls login func prop and, if successful, redirect to /, but eventually the users homepage.
-    */
+  /** 
+   * setUser responds with an object of the [name]: value pairs that is saved as the user.
+   * This handle change is fired everytime the input box is manipulated by the user. 
+   */
+  function handleChange(evt) {
+    const { name, value } = evt.target;
+    setUser(data => ({ ...data, [name]: value }));
+  }
+
+  /** Handle form submit:
+  *
+  * Calls login func prop and, if successful, redirect to /, but eventually the users homepage.
+  */
   async function handleSubmit(evt) {
     evt.preventDefault();
     
       const response = await axios.post("http://localhost:5000/auth/register", {
-        formData
+        user
       });
 
       alert(response.data.message)
       navigate("/");
   }
-
-  /** Update form data field */
-  function handleChange(evt) {
-    const { name, value } = evt.target;
-    setFormData(data => ({ ...data, [name]: value }));
-  }
-
 
   // Returns the Signup Form
   return (
@@ -64,7 +64,7 @@ function RegisterForm(){
             <label> Set Username </label>
             <input 
                 name = "username"
-                value = {formData.username}
+                value = {setUser.username}
                 onChange = {handleChange}
             />
 
@@ -72,14 +72,14 @@ function RegisterForm(){
             <input 
                 type = "password"
                 name = "userPassword"
-                value = {formData.userPassword}
+                value = {setUser.userPassword}
                 onChange = {handleChange}
             />
 
             <label> Set Address </label>
             <input 
                 name = "userAddress"
-                value = {formData.userAddress}
+                value = {setUser.userAddress}
                 onChange = {handleChange}
             />
 

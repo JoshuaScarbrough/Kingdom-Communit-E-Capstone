@@ -86,28 +86,8 @@ CREATE TABLE comments(
     urgentPost_ID INTEGER REFERENCES urgentPosts(id),
     event_ID INTEGER REFERENCES events(id),
     message_ID INTEGER REFERENCES messages(id),
-    comment_ID INTEGER REFERENCES comments(id),
     comment TEXT NOT NULL,
     datePosted DATE DEFAULT CURRENT_DATE,
-    timePosted TIME DEFAULT CURRENT_TIME,
-    numComments INTEGER DEFAULT 0
+    timePosted TIME DEFAULT CURRENT_TIME
 );
 
--- User to posts/events/message/comment liked relationship
--- CREATE TABLE postsCommented(
---     post_ID INTEGER REFERENCES posts(id),
---     comment_ID INTEGER REFERENCES comments(id),
---     PRIMARY KEY (post_ID, comment_ID)
--- );
-
--- CREATE TABLE urgentPostsCommented(
---     urgentPost_ID INTEGER REFERENCES urgentPosts(id),
---     comment_ID INTEGER REFERENCES comments(id),
---     PRIMARY KEY (urgentPost_ID, comment_ID)
--- );
-
--- CREATE TABLE eventsCommented(
---     event_ID INTEGER REFERENCES events(id),
---     comment_ID INTEGER REFERENCES comments(id),
---     PRIMARY KEY (event_ID, comment_ID)
--- );

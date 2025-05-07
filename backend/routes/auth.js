@@ -14,17 +14,19 @@ router.get('/', (req, res, next) => {
 // The route for registering a user
 router.post("/register", async function (req, res, next){
 
-    const {username, userPassword, userAddress} = req.body
+    const {user} = req.body
+    console.log(user)
+
     try{
 
         // Checks to make sure the address is valid
-        const coordinates = await LatLon.checkAddress(userAddress)
-        console.log(coordinates)
+        const coordinates = await LatLon.checkAddress(user.userAddress)
+        // console.log(coordinates)
 
         if(coordinates){
 
             // Registers the user
-            const newUser = await User.register(username, userPassword, userAddress);
+            const newUser = await User.register(user.username, user.userPassword, user.userAddress);
 
 
             const extractedValues = newUser.row.replace(/[()]/g, "").split(',');

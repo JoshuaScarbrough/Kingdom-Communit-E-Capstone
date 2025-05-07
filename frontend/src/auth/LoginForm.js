@@ -10,13 +10,15 @@ import { Link, useNavigate } from "react-router-dom";
  * Routed as /auth/login
  */
 
-function LoginForm({ login }) {
+function LoginForm() {
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
       username: "",
       userPassword: "",
     });
-    const [formErrors, setFormErrors] = useState([]);
+
+
 
 
     /** Handle form submit:
