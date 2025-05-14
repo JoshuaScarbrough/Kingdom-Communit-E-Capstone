@@ -54,14 +54,15 @@ router.post("/register", async function (req, res, next){
 // The route for a user to Login / Recieve their JWT Token
 router.post("/login", async function (req, res, next){
 
-    const {username, userPassword} = req.body;
+    const {loginUser} = req.body;
     try{
-        const user = await User.authenticate(username, userPassword);
+        const user = await User.authenticate(loginUser.username, loginUser.userPassword);
         
         // Token for User
         const token = createToken(user)
         res.status(200).json({message:'login successful', user, token})
     }catch (e){
+        console.log("failed")
         return next(e)
     }
 })

@@ -37,7 +37,7 @@ router.get('/:id/followers', async function (req, res, next){
 })
 
 // Route that shows all the users a user is following
-router.get('/:id/following', async function (req, res, next){
+router.post('/:id/following', async function (req, res, next){
     const {token} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
@@ -56,7 +56,7 @@ router.get('/:id/following', async function (req, res, next){
         )
 
         const following = results.rows
-        res.send({msg: `List of all users ${user.username} is following`, following: following})
+        res.send({message: `List of all users ${user.username} is following`, following: following})
     }
 })
 

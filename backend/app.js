@@ -4,6 +4,7 @@ const cors = require("cors");
 
 // Parse requests bodies for JSON
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Adds all the routes
 const userRoutes = require('./routes/users');
@@ -18,13 +19,14 @@ const userFeed = require('./routes/usersFeed');
 const messaging = require('./routes/message');
 
 
-app.use(cors({
+const corsOptions = {
     origin: 'http://localhost:3000',
-    methods: ('GET', 'POST', 'PATCH', 'DELETE'),
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     authorization: ('Content-Type', 'Authorization'),
     credentials: true,
     exposedHeaders:( 'Content-Type', 'Authorization')
-}));
+}
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use('/users', userRoutes);

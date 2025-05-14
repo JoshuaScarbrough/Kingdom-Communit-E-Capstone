@@ -208,6 +208,7 @@ class Post {
         )
 
         const allComments = comments.rows
+        console.log(allComments)
 
         return ({comments: allComments})
     }
@@ -223,6 +224,7 @@ class Post {
 
         const comments = await Post.getComments(post_id)
         const allComments = comments.comments
+        console.log(`All comments ${allComments}`)
 
         if(post){
             const eventAndComments = {

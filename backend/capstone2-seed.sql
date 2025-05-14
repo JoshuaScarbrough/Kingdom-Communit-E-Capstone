@@ -161,8 +161,8 @@ VALUES
     (2, 'Help my car just broke down on the way to work!', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '2090 Highway 280/431, Phenix City, AL'),
     (3, 'Can anyone help me move last minute. I had a person cancel and I need some help.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '7206 Schomburg Road, Columbus, Georgia'),
     (4, 'I am starving and I feel like giving up', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '1400 Whitewater Ave, Phenix City, Alabama,'),
-    (6, 'Help my cat is stuck in a tree and I really do not want her to die', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '3206 Thornberry Circle Phenix City AL');
-
+    (6, 'Help my cat is stuck in a tree and I really do not want her to die', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '3206 Thornberry Circle Phenix City AL'),
+    (1, 'This is very URGENT', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '7206 Schomburg Road, Columbus, Georgia');
 
 -- Sample Urgent Posts Comments
 INSERT INTO comments
@@ -176,7 +176,8 @@ VALUES
     (4,2, 'Do not worry hunny me and my boys will be there'),
     (1,3, 'Call me so we can pray (205-718- 1659)'),
     (2,3, 'I am close to you. Do you want to grab some dinner with me?'),
-    (5,4, 'I have been waiting for this moment my entire life');
+    (5,4, 'I have been waiting for this moment my entire life'),
+    (1,5, 'Can you give some more details??');
 
 
 

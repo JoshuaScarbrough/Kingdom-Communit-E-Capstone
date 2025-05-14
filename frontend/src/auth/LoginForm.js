@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
 
 /** Login form.
@@ -13,33 +14,35 @@ import { Link, useNavigate } from "react-router-dom";
 function LoginForm() {
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-      username: "",
-      userPassword: "",
-    });
-
-
-
-
-    /** Handle form submit:
-    *
-    * Calls login func prop and, if successful, redirect to /, but eventually the users homepage.
-    */
-    async function handleSubmit(evt) {
-        evt.preventDefault();
-        let result = await login(formData);
-        if (result.success) {
-          navigate("/");
-        } else {
-          console.log("Errors")
-        }
-      }
     
-    /** Update form data field */
-    function handleChange(evt) {
-        const { name, value } = evt.target;
-        setFormData(l => ({ ...l, [name]: value }));
-    }
+    // This is the user peice of state that updates
+    const [loginUser, setLoginUser] = useState("");
+
+
+    /** 
+   * setUser responds with an object of the [name]: value pairs that is saved as the user.
+   * This handle change is fired everytime the input box is manipulated by the user. 
+   */
+  function handleChange(evt) {
+    const { name, value } = evt.target;
+    setLoginUser(data => ({ ...data, [name]: value }));
+  }
+
+
+  async function handleSubmit(evt) {
+    evt.preventDefault();
+    
+      const response = await axios.post("http://localhost:5000/auth/login", {
+        loginUser
+      });
+
+      alert(response.data.message)
+      sessionStorage.setItem("token", response.data.token)
+      console.log("Stored Token:", sessionStorage.getItem("token"))
+      
+      // Need to refine this to be more RESTFUL
+      navigate("/users");
+  }
 
     return(
         <div>
@@ -62,7 +65,7 @@ function LoginForm() {
                 <label> Username </label>
                 <input 
                     name = "username"
-                    value = {formData.username}
+                    value = {setLoginUser.username}
                     onChange = {handleChange}
                 />
         
@@ -70,7 +73,7 @@ function LoginForm() {
                 <input 
                     type = "password"
                     name = "userPassword"
-                    value = {formData.userPassword}
+                    value = {setLoginUser.userPassword}
                     onChange = {handleChange}
                 />
 

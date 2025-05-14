@@ -3,6 +3,12 @@ import { Router, Routes, Route } from "react-router-dom";
 import Homepage from "../homepage/Homepage";
 import RegisterForm from "../auth/RegisterForm"
 import LoginForm from "../auth/LoginForm";
+import UserHomepage from "../users/UserHomepage";
+import EditUser from "../users/EditUser";
+import UsersFollowing from "../following-followers/Following";
+import UsersFollowers from "../following-followers/Followers";
+import CreatePost from "../users/createPost";
+import EditUserPics from "../users/EditUserPics";
 
 
 /**
@@ -22,7 +28,12 @@ function AllRoutes({login, signup}){
                 <Route path="/" element={<Homepage />} />
                 <Route path="/auth/register" element={<RegisterForm />} />
                 <Route path="/auth/login" element={<LoginForm login={login} />} />
-
+                <Route path="/users" element={<UserHomepage />} />
+                <Route path="/users/edit" element={<EditUser />} />
+                <Route path="/users/editPics" element={<EditUserPics />} />
+                <Route path="/users/following" element={<UsersFollowing />} />
+                <Route path="/users/followers" element={<UsersFollowers />} />
+                <Route path="/users/CreatePost" element={<CreatePost />} />
 
 
             </Routes>
