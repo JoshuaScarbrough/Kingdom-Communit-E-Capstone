@@ -10,7 +10,7 @@ router.get('/', async function (req, res, next){
     res.send("The liked Post route is working")
 })
 
-router.get('/:id', async function (req, res, next){
+router.post('/:id', async function (req, res, next){
     const {token} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 

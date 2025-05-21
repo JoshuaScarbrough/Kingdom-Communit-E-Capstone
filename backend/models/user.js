@@ -99,6 +99,7 @@ class User {
 
             // Selects all urgent posts
             const urgentPosts = await UrgentPost.getAllFullUrgentPosts(user.id);
+            console.log(urgentPosts)
 
             // Selects all events
             const events = await Event.getAllFullEvents(user.id);

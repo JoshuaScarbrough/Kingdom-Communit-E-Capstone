@@ -30,7 +30,7 @@ router.post('/', async function getAllUsers (req, res, next){
 
 // Welcome the user once they have logged into the site
 // * Need to insert API Call for the uplifting quote*
-router.get('/:id', async function getUser (req, res, next){
+router.post('/:id', async function getUser (req, res, next){
     try {
         const {token} = req.body;
         const data = jwt.verify(token, SECRET_KEY);
@@ -44,7 +44,7 @@ router.get('/:id', async function getUser (req, res, next){
 
             const user = results.rows[0]
 
-            return res.json({msg: `Welcome to the Kingdom ${user.username}`})
+            return res.json({msg: `Welcome to the Kingdom ${user.username}`, user: user})
         }
     } catch (e) {
         return next (e);
@@ -77,9 +77,7 @@ router.post('/:id/homepage', async function homepage (req, res, next){
             // Gets all the data for the posts, events, urgentPosts
             const posts = allPosts.posts
             const events = allPosts.events
-            console.log(events)
             const urgentPosts = allPosts.urgentPosts
-            console.log(urgentPosts)
     
             return res.json({
                 user: {
@@ -167,7 +165,6 @@ router.patch("/:id/updatePhotos", async function (req, res, next){
            // Uses spread notation to get the values for the current user and any value inserted into the req.body
            // This is incase user doesn't fill out all fields
            const update = { ...currentUser, ...req.body}
-           console.log(update)
            const userUpdated = update.updatedUser
            console.log("Look Here", userUpdated)
 

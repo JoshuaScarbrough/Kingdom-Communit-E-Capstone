@@ -9,6 +9,11 @@ import UsersFollowing from "../following-followers/Following";
 import UsersFollowers from "../following-followers/Followers";
 import CreatePost from "../users/createPost";
 import EditUserPics from "../users/EditUserPics";
+import UserFeed from "../feed/UsersFeed";
+import CommentPost from "../feed/CommentPost";
+import CommentEvent from "../feed/commentEvent";
+import CommentUrgentPost from "../feed/commentUrgentPost";
+
 
 
 /**
@@ -34,6 +39,10 @@ function AllRoutes({login, signup}){
                 <Route path="/users/following" element={<UsersFollowing />} />
                 <Route path="/users/followers" element={<UsersFollowers />} />
                 <Route path="/users/CreatePost" element={<CreatePost />} />
+                <Route path="/users/feed" element={<UserFeed />} />
+                <Route path="/users/feed/commentPost" element={<CommentPost />} />
+                <Route path="/users/feed/commentEvent" element={<CommentEvent />} />
+                <Route path="/users/feed/commentUrgentPost" element={<CommentUrgentPost />} />
 
 
             </Routes>

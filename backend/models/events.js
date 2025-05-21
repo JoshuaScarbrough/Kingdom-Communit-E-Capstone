@@ -83,33 +83,40 @@ class Event{
 
     // Function to like a Event
     static async likeEvent(user_id, event_id){
+        console.log("USER IDIDID", user_id)
+        console.log("EVENT IDIDID", event_id)
 
         // Selects user
-        const user = await User.get(user_id)
+        let user = await db.query(`SELECT * FROM users WHERE id=$1`, [user_id])
+        user = user.rows
 
         // Selects the post
         const event = await Event.getEvent(event_id);
 
         // Selects event numLikes
-        let numLikes = await Event.setNumLikes(event_id)
+        let numLikes = await Event.setNumLikes(event_id);
+        console.log(" This is the current NUMLIKES Number", numLikes)
+
 
         // Likes the event
         const like = await db.query(
             `INSERT iNTO eventsLiked (user_id, event_id)
             VALUES ($1, $2) `,
-            [user.id, event.id]
+            [user_id, event_id]
         )
 
         if(like){
 
-            eventLikes = eventLikes + 1;
+            numLikes = numLikes + 1;
+            console.log(" This is the NEWNEWNEW NUMLIKES Number", numLikes)
+
  
             const updateLikes = await db.query(
                 `UPDATE events SET numlikes = $1 WHERE id = $2`,
-                [eventLikes, event.id]
+                [numLikes, event_id]
             )
-            updateLikes;
 
+            console.log("NUM LIKES AFTER THE uPDATE", numLikes)
             return ({message: `${user.username}, has liked a event`, event: event})
         }
 
@@ -120,17 +127,19 @@ class Event{
     static async unlikeEvent(user_id, event_id){
 
         // Selects user
-        const user = await User.get(user_id)
+        let user = await db.query(`SELECT * FROM users WHERE id=$1`, [user_id])
+        user = user.rows
 
-        // Selects the post
+        // Selects the Event
         const event = await Event.getEvent(event_id);
 
-        // Selects post numLikes
+        // Selects event numLikes
         let eventLikes = event.numlikes
+        
 
         let unlike = await db.query(
             `DELETE FROM eventsLiked WHERE user_id = $1 AND event_id = $2`,
-            [user.id, event.id]
+            [user_id, event_id]
         )
         unlike;
 
@@ -139,7 +148,7 @@ class Event{
 
             const updateLikes = await db.query(
                 `UPDATE events SET numlikes = $1 WHERE id = $2`,
-                [eventLikes, event.id]
+                [eventLikes, event_id]
             )
             updateLikes;
 
@@ -151,11 +160,7 @@ class Event{
 
     // Function to comment on a post in the Posts table
     static async addComment(user_id, event_id, comment){
-        // Selects user
-        const user = await User.get(user_id)
 
-        // Selects the post
-        const event = await Event.getEvent(event_id);
 
         // Selects post numCommens
         let numComments = await Event.setNumComments(event_id)
@@ -164,7 +169,7 @@ class Event{
         let insertComment = await db.query(
             `INSERT INTO comments(user_id, event_id, comment)
             VALUES($1, $2, $3) `,
-            [user.id, event.id, comment]
+            [user_id, event_id, comment]
 
         )
         insertComment;
@@ -175,7 +180,7 @@ class Event{
 
             const updateNumComments = await db.query(
                 `UPDATE events SET numcomments = $1 WHERE id = $2`, 
-                [numComments, event.id]
+                [numComments, event_id]
             )
             updateNumComments;
 

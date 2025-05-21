@@ -34,17 +34,16 @@ router.get('/:id', async function (req, res, next){
 })
 
 // Route to see a specific Event and its comments 
-router.get('/:id/specificEvent', async function (req, res, next){
-    const {token} = req.body;
+router.post('/:id/specificEvent', async function (req, res, next){
+    const {token, eventId} = req.body;
+    console.log(token, eventId)
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
-        const {event_id} = req.body;
-
         if(data){
 
-            const fullPost = await Event.getFullEvent(event_id)
+            const fullPost = await Event.getFullEvent(eventId)
     
             return res.send(fullPost)
         }
@@ -87,20 +86,21 @@ router.post('/:id', async function (req, res, next){
 
 // Delete an event
 router.delete('/:id', async function (req, res, next){
-    const {token} = req.body;
+    const {token, eventId} = req.body;
+    console.log(token, eventId)
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
         if(data){
 
-            const {event_id} = req.body;
+            console.log("Look here", eventId)
 
             // Checks if post exsist
-            const event = await db.query(`SELECT * FROM events WHERE id = $1`, [event_id]);
+            const event = await db.query(`SELECT * FROM events WHERE id = $1`, [eventId]);
             if(event){
 
-                const deletePost = await User.deleteEvent(event_id, data.id)
+                const deletePost = await User.deleteEvent(eventId, data.id)
                 res.status(200).json({message: 'Event deleted Sucessfully', deletePost})
             }
         }
@@ -112,14 +112,14 @@ router.delete('/:id', async function (req, res, next){
 
 // Route to like an Event 
 router.post('/:id/likeEvent', async function(req, res, next){
-    const {token} = req.body;
+    const {token, eventId} = req.body;
+    console.log("TOKENANDID", token, eventId)
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
         if(data){
-            const {event_id} = req.body
-            const likeEvent = await Event.likeEvent(data.id, event_id)
+            const likeEvent = await Event.likeEvent(data.id, eventId)
 
             res.status(200).json({likeEvent})
 
@@ -132,19 +132,17 @@ router.post('/:id/likeEvent', async function(req, res, next){
 
 // Route to unlike an Event
 router.delete('/:id/unlikeEvent', async function(req, res, next){
-    const {token} = req.body;
+    const {token, eventId} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
         if(data){
-          
-            const {event_id} = req.body;
 
             // Selects event to check to see if Valid
-            const event = await db.query(`SELECT * FROM events WHERE id = $1`, [event_id]);
+            const event = await db.query(`SELECT * FROM events WHERE id = $1`, [eventId]);
             if(event){
-                const unlike = await Event.unlikeEvent(data.id, event_id);
+                const unlike = await Event.unlikeEvent(data.id, eventId);
                 unlike;
 
                 res.status(200).json({message: "Event unliked"})
@@ -160,18 +158,18 @@ router.delete('/:id/unlikeEvent', async function(req, res, next){
 
 // Route to comment on events
 router.post('/:id/commentEvent', async function(req, res, next){
-    const {token} = req.body;
+    const {token, eventId, comment} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
+    user_id = data.id
 
     try{
 
         if(data){
-            const {event_id, comment} = req.body;
 
-            let commentEvent = await Event.addComment(data.id, event_id, comment);
+            let commentEvent = await Event.addComment(user_id, eventId, comment);
             commentEvent = commentEvent.rows;
 
-            return ({message: "Post has been commented on ", comment: commentEvent})
+            return res.send({message: commentEvent})
         }
 
     }catch(e){

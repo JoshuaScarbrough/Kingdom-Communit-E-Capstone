@@ -13,7 +13,7 @@ router.get('/', async function (req, res, next){
     res.send("User Feed route is working");
 })
 
-router.get('/:id', async function (req, res, next){
+router.post('/:id', async function (req, res, next){
     const {token} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
@@ -21,10 +21,7 @@ router.get('/:id', async function (req, res, next){
 
         if(data){
 
-            // const distance = await LatLon.getDistanceBetweenUsers(data.id, compareUser_id)
-
             let user = await User.get(data.id)
-            console.log(user)
 
             const feed = await Post.getAllFeedPosts()
             const followingFeed = await Post.getAllFollowingFeedPosts(data.id)

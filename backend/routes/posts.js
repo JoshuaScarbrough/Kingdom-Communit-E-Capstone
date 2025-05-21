@@ -37,18 +37,16 @@ router.get('/:id', async function (req, res, next){
 })
 
 // Route to see a specific post and its comments 
-router.get('/:id/specificPost', async function (req, res, next){
-    const {token} = req.body;
+router.post('/:id/specificPost', async function (req, res, next){
+    const {token, postId} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
-        const {post_id} = req.body;
-
         if(data){
 
 
-            const fullPost = await Post.getFullPost(post_id)
+            const fullPost = await Post.getFullPost(postId)
     
             return res.send(fullPost)
 
@@ -63,14 +61,18 @@ router.get('/:id/specificPost', async function (req, res, next){
 // Create a post
 router.post('/:id', async function (req, res, next){
     const {token} = req.body;
+    console.log(token)
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
+
         if(data){
 
-            const {post, imageUrl} = req.body
-            const newPost = await User.createPost(data.username, post, imageUrl)
+            const {post} = req.body
+            console.log(post)
+
+            const newPost = await User.createPost(data.username, post)
 
             const extractPost = newPost.row.replace(/[()]/g, "").split(',');
                 
@@ -92,20 +94,22 @@ router.post('/:id', async function (req, res, next){
 
 // Delete a post 
 router.delete('/:id', async function (req, res, next){
-    const {token} = req.body;
+    const {token, postId} = req.body;
+    console.log(token, postId)
     const data = jwt.verify(token, SECRET_KEY);
-
+    
     try{
 
         if(data){
 
-            const {post_id} = req.body;
+            console.log("Look here", postId)
 
             // Checks if post exsist
-            const posts = await db.query(`SELECT * FROM posts WHERE id = $1`, [post_id]);
+            const posts = await db.query(`SELECT * FROM posts WHERE id = $1`, [postId]);
+
             if(posts){
 
-                const deletePost = await User.deletePost(post_id, data.id)
+                const deletePost = await User.deletePost(postId, data.id)
                 res.status(200).json({message: 'Post deleted Sucessfully', deletePost})
             }
         }
@@ -117,14 +121,13 @@ router.delete('/:id', async function (req, res, next){
 
 // Route to like a post 
 router.post('/:id/likePost', async function(req, res, next){
-    const {token} = req.body;
+    const {token, postId} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
         if(data){
-            const {post_id} = req.body
-            const likePost = await Post.likePost(data.id, post_id)
+            const likePost = await Post.likePost(data.id, postId)
 
             res.status(200).json({likePost})
 
@@ -137,17 +140,16 @@ router.post('/:id/likePost', async function(req, res, next){
 
 // Route to unlike a Post
 router.delete('/:id/unlikePost', async function(req, res, next){
-    const {token} = req.body;
+    const {token, postId} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
         if(data){
-            const {post_id} = req.body;
 
-            const post = await db.query(`SELECT * FROM posts where id = $1`, [post_id]);
+            const post = await db.query(`SELECT * FROM posts where id = $1`, [postId]);
             if(post){
-                const unlike = await Post.unlikePost(data.id, post_id);
+                const unlike = await Post.unlikePost(data.id, postId);
                 unlike;
 
                 res.status(200).json({message: "Post unliked"})
@@ -162,16 +164,14 @@ router.delete('/:id/unlikePost', async function(req, res, next){
 
 // Route to comment on posts
 router.post('/:id/commentPost', async function(req, res, next){
-    const {token} = req.body;
+    const {token, postId, comment} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
         if(data){
-            const {post_id, comment} = req.body;
 
-            let commentPost = await Post.addComment(data.id, post_id, comment);
-            console.log(commentPost)
+            let commentPost = await Post.addComment(data.id, postId, comment);
             
             return res.send({message: commentPost})
         }

@@ -11,16 +11,15 @@ static async getUrgentPost(post_id){
     )
     selectedPost = selectedPost.rows[0]
 
-    let realDiryDan 
+    let res 
 
     if(selectedPost !== undefined ){
 
-        realDiryDan = selectedPost
-        console.log(realDiryDan)
-        return realDiryDan
+        res = selectedPost
+        return res
     }
     else{
-        console.log(selectedPost)
+        console.log( "Tingus" )
     }
 
 }
@@ -28,23 +27,26 @@ static async getUrgentPost(post_id){
 static async setNumComments(post_id){
 
     // Selects the post 
-    const post = await UrgentPost.getUrgentPost(post_id);
-    console.log(post)
+    let postData = await db.query(`SELECT * FROM urgentPosts WHERE id=$1`, [post_id]);
+    postData = postData.rows
+
+    const post = postData[0]
 
     let postNumComments = post.numcomments
-    console.log(postNumComments)
+
 
     // Checks to see if their are comments in the database already for the comment
     let commentCheck = await db.query(
         `SELECT * FROM comments WHERE urgentPost_id = $1`, 
         [post_id]
     )
-    commentCheck = commentCheck.rows
+    commentCheck = commentCheck.rows[0]
 
     if(postNumComments !== commentCheck.length){
 
         for(let i=0; i< commentCheck.length; i++){
-            postNumComments ++
+            postNumComments + 1
+
         }
 
         const setNumComments = await db.query(
@@ -55,20 +57,16 @@ static async setNumComments(post_id){
             [postNumComments, post_id]
 
         )
-        console.log(setNumComments)
+
+        console.log("AFTER THE AWAIT CALL", postNumComments)
+        return(postNumComments)
     }
 
-    return(postNumComments)
     
 }
 
 // Function to comment on a post in the UrgentPosts table
 static async addComment(user_id, post_id, comment){
-    // Selects user
-    const user = await User.get(user_id)
-
-    // Selects the post
-    const post = await UrgentPost.getUrgentPost(post_id);
 
     // Selects post numComments
     let numComments = await UrgentPost.setNumComments(post_id)
@@ -77,7 +75,7 @@ static async addComment(user_id, post_id, comment){
     let insertComment = await db.query(
         `INSERT INTO comments(user_id, post_id, comment)
         VALUES($1, $2, $3) `,
-        [user.id, post.id, comment]
+        [user_id, post_id, comment]
 
     )
 
@@ -87,7 +85,7 @@ static async addComment(user_id, post_id, comment){
 
         const updateNumComments = await db.query(
             `UPDATE urgentPosts SET numcomments = $1 WHERE id = $2`, 
-            [numComments, post.id]
+            [numComments, post_id]
         )
         updateNumComments;
 
@@ -112,15 +110,15 @@ static async getComments(post_id){
     return ({comments: allComments})
 }
 
- // Function to get a specific event from the user and its comments from the Urgent Posts table
- static async getFullUrgentPost(post_id){
+ // Function to get a specific Urgent Post from the user and its comments from the Urgent Posts table
+ static async getFullUrgentPost(urgentPostId){
 
-    const post = await UrgentPost.getUrgentPost(post_id)
+    const post = await UrgentPost.getUrgentPost(urgentPostId)
 
     // Selects post numComments
-    let numComments = await UrgentPost.setNumComments(post_id)
+    let numComments = await UrgentPost.setNumComments(urgentPostId)
 
-    const comments = await UrgentPost.getComments(post_id)
+    const comments = await UrgentPost.getComments(urgentPostId)
     const allComments = comments.comments
 
     if(post){
@@ -135,6 +133,7 @@ static async getComments(post_id){
 
   // Get all post and their comments from the Urgent Posts table 
   static async getAllFullUrgentPosts(user_id){
+    console.log("Step two were getting all the user ids", user_id)
 
     let user = await db.query(
         `SELECT * FROM users WHERE id = $1`,
@@ -147,12 +146,13 @@ static async getComments(post_id){
         [user_id]
     )
     allPosts = allPosts.rows
+    console.log("Step three found inside of uP.js models (getFullUrentPosts)", allPosts)
 
     const ids = allPosts.map(post => post.id)
 
-    const fullEvent = await Promise.all(ids.map(async (id) => await UrgentPost.getFullUrgentPost(id)))
+    const fullUrgentPost = await Promise.all(ids.map(async (id) => await UrgentPost.getFullUrgentPost(id)))
 
-    return fullEvent
+    return fullUrgentPost
 }
 
 

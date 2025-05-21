@@ -31,7 +31,7 @@ CREATE TABLE posts(
 -- User to posts liked relationship
 CREATE TABLE postsLiked(
     user_ID INTEGER REFERENCES users(id),
-    post_ID INTEGER REFERENCES posts(id),
+    post_ID INTEGER REFERENCES posts(id) ON DELETE CASCADE,
     PRIMARY KEY (user_ID, post_ID)
 );
 
@@ -62,7 +62,7 @@ CREATE TABLE events(
 -- User to events liked relationship
 CREATE TABLE eventsLiked(
     user_ID INTEGER REFERENCES users(id),
-    event_ID INTEGER REFERENCES events(id),
+    event_ID INTEGER REFERENCES events(id) ON DELETE CASCADE,
     PRIMARY KEY (user_ID, event_ID)
 );
 
@@ -82,9 +82,9 @@ CREATE TABLE messages(
 CREATE TABLE comments(
     id SERIAL PRIMARY KEY,
     user_ID INTEGER NOT NULL REFERENCES users(id),
-    post_ID INTEGER REFERENCES posts(id),
-    urgentPost_ID INTEGER REFERENCES urgentPosts(id),
-    event_ID INTEGER REFERENCES events(id),
+    post_ID INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+    urgentPost_ID INTEGER REFERENCES urgentPosts(id) ON DELETE CASCADE,
+    event_ID INTEGER REFERENCES events(id) ON DELETE CASCADE,
     message_ID INTEGER REFERENCES messages(id),
     comment TEXT NOT NULL,
     datePosted DATE DEFAULT CURRENT_DATE,

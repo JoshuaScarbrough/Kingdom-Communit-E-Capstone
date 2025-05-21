@@ -4,13 +4,14 @@ const db = require('../db');
 const jwt = require("jsonwebtoken");
 
 const { SECRET_KEY } = require("../config");
-const Event = require('../models/events')
+const Event = require('../models/events');
+const { getFullPost } = require('../models/posts');
 
 router.get('/', async function (req, res, next){
     res.send("The liked Events route is working")
 })
 
-router.get('/:id', async function (req, res, next){
+router.post('/:id', async function (req, res, next){
     const {token} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
@@ -27,7 +28,7 @@ router.get('/:id', async function (req, res, next){
             let likedEventIds = await db.query(
                 `SELECT id from events 
                 JOIN eventsLiked ON events.id = eventsLiked.event_id
-                WHERE eventsLiked.event_id = $1`,
+                WHERE eventsLiked.user_id = $1`,
                 [user.id]
             )
             likedEventIds = likedEventIds.rows

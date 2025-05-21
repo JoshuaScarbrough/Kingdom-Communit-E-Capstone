@@ -4,7 +4,8 @@ import {jwtDecode} from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
 
 function UsersFollowers() {
-
+    const navigate = useNavigate();
+  
     // Get the token from sessionStorage and decode it
     const token = sessionStorage.getItem("token");
     const decoded = token ? jwtDecode(token) : null;
@@ -44,12 +45,23 @@ function UsersFollowers() {
     const listItems = mappedUsernames.map((name, index) => (
       <li key={index}>{name}</li>
     ));
+
+    const handleClick = () => {
+      navigate('/users')
+    }
   
     return (
       <div>
-        <h1>Kingdom Communit-E</h1>
-        <h3>{followersData.message}</h3>
-        <ul>{listItems}</ul>
+        <section>
+            <h1>Kingdom Communit-E</h1>
+            <button onClick={handleClick}> Back </button>
+        </section>
+        
+        <section>
+            <h3>{followersData.message}</h3>
+            <ul>{listItems}</ul>
+        </section>
+        
       </div>
     );
   }

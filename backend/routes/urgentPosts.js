@@ -33,17 +33,15 @@ router.get('/:id', async function (req, res, next){
 })
 
 // Route to see a specific Event and its comments 
-router.get('/:id/specificUrgentPost', async function (req, res, next){
-    const {token} = req.body;
+router.post('/:id/specificUrgentPost', async function (req, res, next){
+    const {token, urgentPostId} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
-        const {post_id} = req.body;
-
         if(data){
 
-            const fullPost = await UrgentPost.getFullUrgentPost(post_id)
+            const fullPost = await UrgentPost.getFullUrgentPost(urgentPostId)
     
             return res.send(fullPost)
         }
@@ -86,20 +84,18 @@ router.post('/:id', async function (req, res, next){
 
 // Delete an Urgent Post
 router.delete('/:id', async function (req, res, next){
-    const {token} = req.body;
+    const {token, urgentPostId} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
 
         if(data){
 
-            const {post_id} = req.body;
-
             // Checks if post exsist
-            const posts = await db.query(`SELECT * FROM urgentPosts WHERE id = $1`, [post_id]);
+            const posts = await db.query(`SELECT * FROM urgentPosts WHERE id = $1`, [urgentPostId]);
             if(posts){
 
-                const deletePost = await User.deleteUrgentPost(post_id, data.id)
+                const deletePost = await User.deleteUrgentPost(urgentPostId, data.id)
                 res.status(200).json({message: 'Urgent Post deleted Sucessfully', deletePost})
             }
         }
@@ -111,18 +107,19 @@ router.delete('/:id', async function (req, res, next){
 
 // Route to comment on Urgent Posts
 router.post('/:id/commentUrgentPost', async function(req, res, next){
-    const {token} = req.body;
+    const {token, urgentPostId, comment} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
+    user_id = data.id
+
 
     try{
 
         if(data){
-            const {post_id, comment} = req.body;
 
-            let commentUrgentPost = await UrgentPost.addComment(data.id, post_id, comment);
+            let commentUrgentPost = await UrgentPost.addComment(user_id, urgentPostId, comment);
             commentUrgentPost = commentUrgentPost.rows;
 
-            return ({message: "Urgent post has been commented on ", comment: commentUrgentPost})
+            return res.send({message: commentUrgentPost})
         }
 
     }catch(e){

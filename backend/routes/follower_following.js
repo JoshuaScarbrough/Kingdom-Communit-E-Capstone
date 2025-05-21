@@ -13,7 +13,7 @@ router.get('/', async function (req, res, next){
 })
 
 // Route that shows all followers a user has (This is on the users page)
-router.get('/:id/followers', async function (req, res, next){
+router.post('/:id/followers', async function (req, res, next){
     const {token} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
 
@@ -32,7 +32,7 @@ router.get('/:id/followers', async function (req, res, next){
         )
 
         const followers = results.rows
-        res.send({msg: "List of all followers", followers: followers})
+        res.send({message: `List of all ${user.username}'s followers`, followers: followers})
     }
 })
 
@@ -79,21 +79,25 @@ router.post('/:id/addUser', async function (req, res, next){
 
 // Route that allows you to stop following someone
 router.delete('/:id/unfollow', async function (req, res, next){
-    const {token} = req.body;
-    const data = jwt.verify(token, SECRET_KEY);
 
-    if(data){
         // user that you want to unfollow
-        const {following_id} = req.body
+        const {username, userId} = req.body
+        console.log(username, userId)
 
+        let unfollowingUser = await db.query(`SELECT id FROM users WHERE username = $1`, [username]);
+        unfollowingUser = unfollowingUser.rows
+        
+        const extractedId = unfollowingUser[0].id
+        console.log(extractedId)
+        
         let unfollow = await db.query(
             `DELETE FROM followers WHERE follower_id = $1 AND following_id = $2`,
-            [data.id, following_id]
+            [userId, extractedId]
         )
         
         res.send({message: `Successfully unfollowed user `})
 
-    }
+    
 })
 
 // You get to see another users page and you also have the ability to follow/unfollow them 

@@ -100,16 +100,17 @@ class Post {
         const like = await db.query(
             `INSERT iNTO postsLiked (user_id, post_id)
             VALUES ($1, $2) `,
-            [user.id, post.id]
+            [user_id, post_id]
         )
+        console.log("This is supposed to be the like", like)
 
         if(like){
 
-            postLikes = postLikes + 1;
+            numLikes = numLikes + 1;
  
             const updateLikes = await db.query(
                 `UPDATE posts SET numlikes = $1 WHERE id = $2`,
-                [postLikes, post.id]
+                [numLikes, post_id]
             )
             updateLikes;
 
@@ -156,6 +157,7 @@ class Post {
 
         // Function to comment on a post in the Posts table
         static async addComment(user_id, post_id, comment){
+            console.log("We need to see what is going on right now, This is the inserted comment", comment)
 
             // Selects user
             let user = await db.query(`SELECT * FROM users WHERE id = $1`, [user_id])
@@ -208,7 +210,6 @@ class Post {
         )
 
         const allComments = comments.rows
-        console.log(allComments)
 
         return ({comments: allComments})
     }
@@ -224,15 +225,14 @@ class Post {
 
         const comments = await Post.getComments(post_id)
         const allComments = comments.comments
-        console.log(`All comments ${allComments}`)
 
         if(post){
-            const eventAndComments = {
+            const postsAndComments = {
                 post: post,
                 comments: allComments
             }
 
-            return (eventAndComments)
+            return (postsAndComments)
         }
     }
 
@@ -276,7 +276,7 @@ class Post {
 
         // Loop through all the Posts and pull out their ids
         let allUrgentPostIds = await db.query(
-            `SELECT id FROM posts`
+            `SELECT id FROM urgentPosts`
         )
         allUrgentPostIds = allUrgentPostIds.rows
 
@@ -296,9 +296,8 @@ class Post {
             fullEvent: fullEvent,
             fullUrgentPost: fullUrgentPost
         }
+
         return feed
-
-
     }
 
     static async getAllFollowingFeedPosts(user_id){
