@@ -19,7 +19,7 @@ static async getUrgentPost(post_id){
         return res
     }
     else{
-        console.log( "Tingus" )
+        console.log( "Error" )
     }
 
 }
@@ -40,12 +40,12 @@ static async setNumComments(post_id){
         `SELECT * FROM comments WHERE urgentPost_id = $1`, 
         [post_id]
     )
-    commentCheck = commentCheck.rows[0]
+    commentCheck = commentCheck.rows
 
     if(postNumComments !== commentCheck.length){
 
         for(let i=0; i< commentCheck.length; i++){
-            postNumComments + 1
+            postNumComments ++
 
         }
 
@@ -58,7 +58,6 @@ static async setNumComments(post_id){
 
         )
 
-        console.log("AFTER THE AWAIT CALL", postNumComments)
         return(postNumComments)
     }
 
@@ -133,7 +132,6 @@ static async getComments(post_id){
 
   // Get all post and their comments from the Urgent Posts table 
   static async getAllFullUrgentPosts(user_id){
-    console.log("Step two were getting all the user ids", user_id)
 
     let user = await db.query(
         `SELECT * FROM users WHERE id = $1`,
@@ -146,7 +144,6 @@ static async getComments(post_id){
         [user_id]
     )
     allPosts = allPosts.rows
-    console.log("Step three found inside of uP.js models (getFullUrentPosts)", allPosts)
 
     const ids = allPosts.map(post => post.id)
 
