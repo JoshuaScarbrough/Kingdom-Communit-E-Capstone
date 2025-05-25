@@ -13,7 +13,13 @@ function CommentUrgentPost(){
         const decoded = token ? jwtDecode(token) : null;
         const userId = decoded ? decoded.id : null;
 
-        const {UrgentPost, comments} = location.state || {};
+        // Makes sure that if there is no token you are re-routed back to the homepage
+        if(token == null){
+            alert("Please Login")
+            navigate("/")
+        }
+
+        const {UrgentPost} = location.state || {};
         const urgentPostId = UrgentPost.id
         const urgentPostPost = UrgentPost.post
         const urgentPostDate = UrgentPost.dateposted

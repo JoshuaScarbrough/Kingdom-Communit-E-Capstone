@@ -13,6 +13,12 @@ function CommentEvent(){
         const decoded = token ? jwtDecode(token) : null;
         const userId = decoded ? decoded.id : null;
 
+        // Makes sure that if there is no token you are re-routed back to the homepage
+        if(token == null){
+            alert("Please Login")
+            navigate("/")
+        }
+
         const {event, comments} = location.state || {};
         const eventId = event.id
         const eventEvent = event.post

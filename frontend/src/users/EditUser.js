@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"
 import {jwtDecode} from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
+import styles from "./EditUser.module.css";  // Import the module CSS
 
 /** 
  * Route for a User to be able to edit their profile.
@@ -30,6 +31,13 @@ function EditUser(){
 
     // Fetch the user data once when the component mounts or if userId changes.
     useEffect(() => {
+
+      // Makes sure that if there is no token you are re-routed back to the homepage
+      if(token == null){
+        alert("Please Login")
+        navigate("/")
+        return; // Stops further execution
+      }
         async function getUser() {
         try {
             // Makes a call to the API that gets the user
@@ -96,59 +104,57 @@ function EditUser(){
       }
 
 
-return(
+return (
+    <div className={styles.editUserPage}>
+      {/* Navigation / Header Section */}
+      <section>
+        <h1>Kingdom Communnit-E</h1>
+        <button onClick={() => navigate("/users")}>Back</button>
+      </section>
 
-    <div>
-        <section>
-            <h1> Kingdom Communnit-E </h1>
-        </section>
+      {/* Edit Title Section */}
+      <section>
+        <h3>Edit User</h3>
+      </section>
 
-        <section>
-            <h3> Edit User </h3>
-        </section>
+      {/* Form Section */}
+      <section>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Username:</label>
+            <input 
+              type="text"
+              name="username"
+              value={updatedUser.username}
+              onChange={handleChange}
+            />
+          </div>
 
-        <section>
-            <form onSubmit={handleSubmit}>
+          <div>
+            <label>Bio:</label>
+            <input
+              type="text"
+              name="bio"
+              value={updatedUser.bio}
+              onChange={handleChange}
+            />
+          </div>
 
-            <div>
-            <label> Username: </label>
-                <input 
-                    type = "text"
-                    name = "username"
-                    value = {updatedUser.username}
-                    onChange = {handleChange}
-                />
-            </div>
+          <div>
+            <label>Address:</label>
+            <input
+              type="text"
+              name="address"
+              value={updatedUser.address}
+              onChange={handleChange}
+            />
+          </div>
 
-            <div>
-            <label> Bio: </label>
-                <input
-                    type = "text"
-                    name = "bio"
-                    value = {updatedUser.bio}
-                    onChange = {handleChange}
-                />
-            </div>
-
-            <div>
-            <label> Address: </label>
-                <input
-                    type = "text" 
-                    name = "address"
-                    value = {updatedUser.address}
-                    onChange = {handleChange}
-                />
-            </div>
-
-            <button onSubmit={handleSubmit} >
-                  Update User
-            </button>
-
-            </form>
-        </section>
+          <button type="submit">Update User</button>
+        </form>
+      </section>
     </div>
-
-)
+  );
 }
 
 export default EditUser;

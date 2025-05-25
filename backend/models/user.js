@@ -22,6 +22,7 @@ class User {
 
         if (duplicateCheck.rows[0]){
             console.log("Duplicate Value")
+            return undefined
         }
 
         // Used to hash passwords for security
@@ -46,7 +47,6 @@ class User {
         );
 
         const user = results.rows[0];
-        console.log(user)
         return user;
 
     }
@@ -60,15 +60,24 @@ class User {
             [username]
          );
         const authUser = results.rows[0];
+        
+        if(authUser == undefined){
+            return(undefined)
+        }
 
         // Uses bcrypt to compare encoded password with password the user entered
-        let isValidPassword = await bcrypt.compare(userPassword, authUser.userpassword);
-        if(isValidPassword = true){
+        const isValidPassword = await bcrypt.compare(userPassword, authUser.userpassword);
+
+
+        if(isValidPassword == true){
             delete authUser.userpassword
             return authUser;
-        }else {
-            console.log("Invalid username / password")
-         }
+        }else if(userPassword == authUser.userpassword) {
+            delete authUser.userpassword
+            return authUser;
+        }else{
+            return(undefined)
+        }
 
     }
 
@@ -79,7 +88,13 @@ class User {
             [user_id]
         )
         user = user.rows[0]
-        return user
+
+        if(!user){
+            return undefined 
+        }else{
+            return user
+        }
+     
     }
 
     // Function that gets all posts regardless of the post type dependant upon the user
@@ -99,7 +114,6 @@ class User {
 
             // Selects all urgent posts
             const urgentPosts = await UrgentPost.getAllFullUrgentPosts(user.id);
-            console.log(urgentPosts)
 
             // Selects all events
             const events = await Event.getAllFullEvents(user.id);

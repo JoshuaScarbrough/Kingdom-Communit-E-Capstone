@@ -1,0 +1,97 @@
+/* EditUser.module.css */
+
+.editUserPage {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Navigation / Header Section */
+.editUserPage > section:first-of-type {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #DAA520;  /* Rich Gold */
+  padding: 15px 20px;
+}
+
+.editUserPage > section:first-of-type h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #FFFFFF;  /* White for clear readability */
+}
+
+.editUserPage > section:first-of-type button {
+  background-color: #DAA520;
+  color: #FFFFF0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.editUserPage > section:first-of-type button:hover {
+  background-color: #FFD700;  /* Golden Yellow on hover */
+}
+
+/* Edit User Title Section */
+.editUserPage > section:nth-of-type(2) {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.editUserPage > section:nth-of-type(2) h3 {
+  margin: 0;
+  font-size: 24px;
+  color: #00AEEF;  /* Heavenly Blue accent */
+}
+
+/* Form Section Styling */
+.editUserPage > section:nth-of-type(3) {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #FFFFF0;       /* Ivory background */
+  padding: 20px;
+  border: 2px solid #DAA520;       /* Rich Gold border */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(138, 105, 8, 0.2);
+}
+
+.editUserPage > section:nth-of-type(3) form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.editUserPage > section:nth-of-type(3) label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.editUserPage > section:nth-of-type(3) input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #DAA520;
+  border-radius: 4px;
+}
+
+.editUserPage > section:nth-of-type(3) button {
+  background-color: #DAA520;
+  color: #FFFFF0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.editUserPage > section:nth-of-type(3) button:hover {
+  background-color: #FFD700;
+}

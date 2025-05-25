@@ -1,0 +1,70 @@
+.followersPage {
+  /* Styles specific to the Followers page container */
+}
+
+.navSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #DAA520;
+  padding: 15px 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.navSection h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #FFFFFF;
+}
+
+.backBtn {
+  background-color: #DAA520;
+  color: #FFFFF0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.backBtn:hover {
+  background-color: #FFD700;
+}
+
+.followersContainer {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #FFFFF0;
+  padding: 20px;
+  border: 2px solid #DAA520;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(138, 105, 8, 0.2);
+  font-family: 'Poppins', sans-serif;
+}
+
+.followersContainer h3 {
+  margin: 0 0 15px 0;
+  font-size: 20px;
+  color: #00AEEF;
+  border-bottom: 2px solid #DAA520;
+  padding-bottom: 5px;
+}
+
+.followersContainer ul {
+  list-style: none;
+  margin: 15px 0 0 0;
+  padding: 0;
+}
+
+.followersContainer ul li {
+  font-size: 16px;
+  color: #333;
+  padding: 8px 0;
+  border-bottom: 1px solid #DAA520;
+}
+
+.followersContainer ul li:last-child {
+  border-bottom: none;
+}

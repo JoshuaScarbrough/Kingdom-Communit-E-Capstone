@@ -46,7 +46,24 @@ app.get('/', (req, res) => {
     return res.send('Kingdom Communit-E Homepage!!')
 })
 
-
-app.listen(5000, function () {
+if (process.env.NODE_ENV !== 'test'){
+    app.listen(5000, function () {
     console.log('Server running on port 5000')
-})
+    });
+}
+
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log the error stack for debugging
+
+  const status = err.status || 500;
+  const message = err.message || 'Something went wrong';
+
+  res.status(status).json({
+    error: {
+      message,
+      status
+    }
+  });
+});
+
+module.exports = app;

@@ -1,0 +1,60 @@
+/* Global styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #00AEEF 0%, #FFD700 60%, #FFFFF0 100%); /* Heavenly Blue to Gold */
+  background-attachment: fixed;
+  text-align: center;
+  color: #FFFFF0; /* Ivory */
+}
+
+/* Centering the content */
+.container {
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 30px;
+  background: #FFFFF0; /* Ivory */
+  border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(138, 105, 8, 0.3); /* Deep Bronze Shadow */
+}
+
+/* Center the h1 and add hover effect */
+h1 {
+  font-size: 40px;
+  font-weight: bold;
+  color: #DAA520; /* Rich Gold */
+  text-shadow: 2px 2px 4px rgba(218, 165, 32, 0.5);
+  text-align: center; /* Center the text */
+  margin-top: 50px;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+h1:hover {
+  transform: scale(1.1); /* Enlarges slightly on hover */
+  color: #FFD700; /* Brighter Gold */
+}
+
+/* Navigation links */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+nav a {
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  background-color: #DAA520; /* Rich Gold */
+  color: #FFFFF0; /* Ivory */
+  font-weight: bold;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+nav a:hover {
+  background-color: #FFD700; /* Golden Yellow */
+  transform: scale(1.05);
+}

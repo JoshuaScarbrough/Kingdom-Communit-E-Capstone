@@ -5,12 +5,12 @@ INSERT INTO users
     userAddress
     )
 VALUES
-    ('CarlSamp', 'passwordOne', '3784 Us Highway 431 N Phenix City, AL 36867'),
+    ('CarlSamp', 'passwordOne', '3209 Thornberry Circle Phenix City, Alabama'),
     ('RebeccaPurple', 'passwordTwo', '1409 US-280, Phenix City, AL 36867'),
-    ('DennisMen', 'passwordThree', '1100 Broadway, Columbus, GA, United States, Georgia'),
-    ('MommaLucy', 'passwordFour',  '3909 hwy 80 Phenix City Al 36870, Phenix City, AL'),
-    ('GodSon2001', 'passwordFive', '4225 University Ave, Columbus, GA'),
-    ('ILuvGod', 'passwordSix', '2444 W Britt David Rd, Columbus, GA');
+    ('DennisMen', 'passwordThree', '115 12th St, Columbus, GA 31901'),
+    ('MommaLucy', 'passwordFour',  '3896 US-80, Phenix City, AL 36870'),
+    ('GodSon2001', 'passwordFive', '4225 University Ave, Columbus, GA 31907'),
+    ('ILuvGod', 'passwordSix', '5689 Armour Rd, Columbus, GA 31909');
 
 
 -- Sets followers / following relationship
@@ -19,7 +19,6 @@ INSERT INTO followers
     following_ID
     )
 VALUES
-    (1,2),
     (1,3),
     (1,6),
     (2,1),
@@ -158,11 +157,12 @@ INSERT INTO urgentPosts
     userLocation
     )
 VALUES
-    (2, 'Help my car just broke down on the way to work!', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '2090 Highway 280/431, Phenix City, AL'),
+    (2, 'Help my car just broke down on the way to work!', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '2090 US-280 #431, Phenix City, AL 36867'),
     (3, 'Can anyone help me move last minute. I had a person cancel and I need some help.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '7206 Schomburg Road, Columbus, Georgia'),
     (4, 'I am starving and I feel like giving up', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '1400 Whitewater Ave, Phenix City, Alabama,'),
     (6, 'Help my cat is stuck in a tree and I really do not want her to die', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '3206 Thornberry Circle Phenix City AL'),
     (1, 'This is very URGENT', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVOa6mAQOQrzGpQODmfsLVo80PbkBnaJD2hw&s', '7206 Schomburg Road, Columbus, Georgia');
+
 
 -- Sample Urgent Posts Comments
 INSERT INTO comments
@@ -177,7 +177,8 @@ VALUES
     (1,3, 'Call me so we can pray (205-718- 1659)'),
     (2,3, 'I am close to you. Do you want to grab some dinner with me?'),
     (5,4, 'I have been waiting for this moment my entire life'),
-    (1,5, 'Can you give some more details??');
+    (2,5, 'Can you give some more details??'),
+    (3,5, 'Yes I would like to be able to help you' );
 
 
 

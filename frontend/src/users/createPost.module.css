@@ -1,0 +1,95 @@
+/* CreateContent.module.css */
+
+.createPostPage {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Navigation / Header Section */
+.navSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #DAA520;  /* Rich Gold */
+  padding: 15px 20px;
+}
+
+.navSection h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #FFFFFF;  /* White for clarity */
+}
+
+.navSection button {
+  background-color: #DAA520;
+  color: #FFFFF0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.navSection button:hover {
+  background-color: #FFD700;  /* Golden Yellow on hover */
+}
+
+/* Form Section Container */
+.formSection {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #FFFFF0;       /* Ivory background */
+  padding: 20px;
+  border: 2px solid #DAA520;       /* Rich Gold border */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(138, 105, 8, 0.2);
+}
+
+/* Form Heading */
+.formSection h3 {
+  margin-top: 0;
+  font-size: 22px;
+  color: #00AEEF;                /* Heavenly Blue accent */
+  border-bottom: 2px solid #DAA520;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+}
+
+/* Reusable Form Group Styling */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.formGroup label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.formGroup input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #DAA520;
+  border-radius: 4px;
+}
+
+/* Submit Button Styling */
+.formSection button[type="submit"] {
+  background-color: #DAA520;
+  color: #FFFFF0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-start;
+}
+
+.formSection button[type="submit"]:hover {
+  background-color: #FFD700;
+}

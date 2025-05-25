@@ -6,10 +6,7 @@ const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 const Post = require("../models/posts");
 
-router.get('/', async function (req, res, next){
-    res.send("The liked Post route is working")
-})
-
+// Route to get all liked posts
 router.post('/:id', async function (req, res, next){
     const {token} = req.body;
     const data = jwt.verify(token, SECRET_KEY);
@@ -24,6 +21,10 @@ router.post('/:id', async function (req, res, next){
             )
             user = user.rows[0]
 
+            if(!user){
+                return res.status(404).send("User not found")
+            }
+
             let likedPostIds = await db.query(
                 `SELECT id from posts 
                 JOIN postsLiked ON posts.id = postsLiked.post_id
@@ -35,7 +36,7 @@ router.post('/:id', async function (req, res, next){
             const ids = likedPostIds.map(post => post.id)
             const fullPost = await Promise.all(ids.map(async (id) => await Post.getFullPost(id)))
 
-            res.send({message: "All liked Posts", posts: fullPost  })
+            res.status(200).send({message: "All liked Posts", posts: fullPost  })
         }
 
     }catch(e){

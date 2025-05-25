@@ -15,35 +15,59 @@ router.get('/', (req, res, next) => {
 router.post("/register", async function (req, res, next){
 
     const {user} = req.body
-    console.log(user)
+
+    // Check if "user" object is provided
+    if (!user) {
+      return res.json({ message: "Missing user data in request body" });
+    }
 
     try{
 
-        // Checks to make sure the address is valid
-        const coordinates = await LatLon.checkAddress(user.userAddress)
-        // console.log(coordinates)
+        const username = user.username
+        const password = user.userPassword
+        const address = user.userAddress
 
-        if(coordinates){
-
-            // Registers the user
-            const newUser = await User.register(user.username, user.userPassword, user.userAddress);
-
-
-            const extractedValues = newUser.row.replace(/[()]/g, "").split(',');
-                
-                let registeredUser = await db.query(
-                    `SELECT id, username FROM users WHERE username = $1`,
-                    [extractedValues[0]]
-                )
-                
-                registeredUser = registeredUser.rows[0]
-        
-        // Token for User
-        const token = createToken(registeredUser)
-        res.status(201).json({message: 'User registered successfully', registeredUser, token});
+        if(!username){
+            // Checks if there is a username
+            console.log("we here")
+            return res.json({message: "Please enter a Username"})
+        }else if(!password){
+            // Checks if there is a password
+            return res.json({message: "Please enter a Password"})
         }else{
-            return res.json({message: "Please enter a valid Address"})
+
+            // Checks to make sure the address is valid
+            const coordinates = await LatLon.checkAddress(address)
+
+            if(coordinates){
+
+                // Registers the user
+                const newUser = await User.register(username, password, address);
+
+                    // This makes sure that a user doesn't register with someone elses Username
+                    if(!newUser){
+                        return res.json({message: `The username ${username} has already been taken. Sorry try again!!`})
+                    }
+
+                    const extractedValues = newUser.row.replace(/[()]/g, "").split(',');
+                
+                    let registeredUser = await db.query(
+                        `SELECT id, username FROM users WHERE username = $1`,
+                        [extractedValues[0]]
+                    )
+                
+                    registeredUser = registeredUser.rows[0]
+        
+                    // Token for User
+                    const token = createToken(registeredUser)
+                    res.status(201).json({message: 'User registered successfully', registeredUser, token});
+
+                }else{
+                    return res.json({message: "Please enter a valid Address"})
+            }
+
         }
+
 
     }catch (e){
         return next(e)
@@ -54,13 +78,23 @@ router.post("/register", async function (req, res, next){
 // The route for a user to Login / Recieve their JWT Token
 router.post("/login", async function (req, res, next){
 
+    // Gets the data from the body
     const {loginUser} = req.body;
+    const username = loginUser.username;
+    const password = loginUser.userPassword;
+
     try{
-        const user = await User.authenticate(loginUser.username, loginUser.userPassword);
-        
+        const user = await User.authenticate(username, password);
+
+
+        if(user === undefined){
+            return res.json({message: 'The username / password is incorrect'})
+        }else{
         // Token for User
         const token = createToken(user)
         res.status(200).json({message:'login successful', user, token})
+        }
+        
     }catch (e){
         console.log("failed")
         return next(e)

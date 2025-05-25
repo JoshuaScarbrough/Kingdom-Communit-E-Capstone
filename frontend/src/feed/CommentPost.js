@@ -13,6 +13,12 @@ function CommentPost(){
         const decoded = token ? jwtDecode(token) : null;
         const userId = decoded ? decoded.id : null;
 
+        // Makes sure that if there is no token you are re-routed back to the homepage
+        if(token == null){
+            alert("Please Login")
+            navigate("/")
+        }
+
         const {post, comments} = location.state || {};
         const postId = post.id
         const postPost = post.post
@@ -46,11 +52,18 @@ function CommentPost(){
             }
         }
 
+        // Function to allow a user to go back to their feed
+        async function visitUserFeed(evt){
+            evt.preventDefault();
+
+            navigate("/users/feed")
+        }
+
         return(
             <div>
                 <section>
                     <h1> Kingdom Communit-E </h1>
-                    <button> Back </button>
+                    <button onClick={visitUserFeed}> Back </button>
                 </section>
 
                 <section>

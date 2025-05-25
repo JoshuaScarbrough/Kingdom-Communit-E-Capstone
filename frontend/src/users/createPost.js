@@ -1,216 +1,197 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios"
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
-import { Link, useNavigate } from "react-router-dom";
-
-/** 
- * Route that allows users to be able to create all types of posts based upon what they choose
- */
+import axios from "axios";
+import styles from "./createPost.module.css";
 
 function CreatePost() {
-    const navigate = useNavigate();
-  
-    // Get the token from sessionStorage and decode it.
-    const token = sessionStorage.getItem("token");
-    const decoded = token ? jwtDecode(token) : null;
-    const userId = decoded ? decoded.id : null;
-  
-    // Initialize state for creating posts.
-    const [createPost, setCreatePost] = useState({
-      post: "",
-      imageurl: "",
-    });
+  const navigate = useNavigate();
 
-    // Initialize state for creating events.
-    const [createEvent, setCreateEvent] = useState({
-        post: "",
-        imageurl: "",
-        userLocation: "",
-    });
+  // Get the token from sessionStorage and decode it.
+  const token = sessionStorage.getItem("token");
+  const decoded = token ? jwtDecode(token) : null;
+  const userId = decoded ? decoded.id : null;
 
-    // Initialize state for creating UrgentPosts.
-    const [createUrgentPost, setCreateUrgentPosts] = useState({
-        post: "",
-        imageurl: "",
-        userLocation: "",
-    });
-  
-    /** 
-     * Updates state every time the input box is manipulated by the user.
-     * The data is coming in as an object and thats why we need the {} with the spread operator to be able to handle that
-     */
-    function handleChangePost(event) {
-        const { name, value } = event.target;
-        setCreatePost(data => ({ ...data, [name]: value }));
+  // If there is no token, redirect to the homepage.
+  if (token == null) {
+    alert("Please Login");
+    navigate("/");
+  }
+
+  // Initialize state for creating posts.
+  const [createPost, setCreatePost] = useState({
+    post: "",
+    imageurl: "",
+  });
+
+  // Initialize state for creating events.
+  const [createEvent, setCreateEvent] = useState({
+    post: "",
+    imageurl: "",
+    userLocation: "",
+  });
+
+  // Initialize state for creating UrgentPosts.
+  const [createUrgentPost, setCreateUrgentPosts] = useState({
+    post: "",
+    imageurl: "",
+    userLocation: "",
+  });
+
+  // Updates state for the Post form.
+  function handleChangePost(event) {
+    const { name, value } = event.target;
+    setCreatePost((data) => ({ ...data, [name]: value }));
+  }
+
+  // Updates state for the Event form.
+  function handleChangeEvent(event) {
+    const { name, value } = event.target;
+    setCreateEvent((data) => ({ ...data, [name]: value }));
+  }
+
+  // Updates state for the Urgent Post form.
+  function handleChangeUrgentPost(event) {
+    const { name, value } = event.target;
+    setCreateUrgentPosts((data) => ({ ...data, [name]: value }));
+  }
+
+  // Allows the Post to be created.
+  async function handleSubmitPost(event) {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/posts/${userId}`,
+        { token, ...createPost }, // Send token along with post data
+        { headers: { "Content-Type": "application/json" } }
+      );
+      alert(response.data.message);
+      navigate("/users");
+    } catch (error) {
+      console.error("Error creating post:", error);
     }
+  }
 
-    function handleChangeEvent(event) {
-        const { name, value } = event.target;
-        setCreateEvent(data => ({ ...data, [name]: value }));
+  // Allows the Event to be created.
+  async function handleSubmitEvent(event) {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/events/${userId}`,
+        { token, ...createEvent },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      alert(response.data.message);
+      navigate("/users");
+    } catch (error) {
+      console.error("Error creating event:", error);
     }
+  }
 
-    function handleChangeUrgentPost(event) {
-        const { name, value } = event.target;
-        setCreateUrgentPosts(data => ({ ...data, [name]: value }));
+  // Allows the Urgent Post to be created.
+  async function handleSubmitUrgentPost(event) {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/urgentPosts/${userId}`,
+        { token, ...createUrgentPost },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      alert(response.data.message);
+      navigate("/users");
+    } catch (error) {
+      console.error("Error creating urgent post:", error);
     }
-  
-    // Allows the post to be created
-    async function handleSubmitPost(event) {
-      event.preventDefault();
-  
-      try {
-        const response = await axios.post(`http://localhost:5000/posts/${userId}`,
-          { token, ...createPost }, // Send token along with post data
-          { headers: { "Content-Type": "application/json" } } 
-        );
-  
-        alert(response.data.message)
-        navigate("/users")
-      } catch (error) {
-        console.error("Error creating post:", error);
-      }
-    }
+  }
 
-    // Allows the event to be created
-    async function handleSubmitEvent(event) {
-        event.preventDefault();
+  // Allows user to navigate back to the homepage.
+  const handleClick = () => {
+    navigate("/users");
+  };
 
-        try {
+  return (
+    <div className={styles.createPostPage}>
+      {/* Navigation / Header Section */}
+      <section className={styles.navSection}>
+        <h1>Kingdom Communit-E</h1>
+        <button onClick={handleClick}>Back</button>
+      </section>
 
-            const response = await axios.post(`http://localhost:5000/events/${userId}`, 
-                { token, ...createEvent }, // Send token along with post data
-                { headers: {"Content-Type": "application/json" } }
-            );
-
-          alert(response.data.message)
-          navigate("/users")
-        }catch (error) {
-         console.error("Error creating post:", error);
-        }
-    }
-
-
-    // Allows the Urgent Post to be created
-    async function handleSubmitUrgentPost(event) {
-        event.preventDefault();
-
-        try {
-
-            const response = await axios.post(`http://localhost:5000/urgentPosts/${userId}`, 
-                { token, ...createUrgentPost }, // Send token along with post data
-                { headers: {"Content-Type": "application/json" } }
-            );
-
-          alert(response.data.message)
-          navigate("/users")
-        }catch (error) {
-         console.error("Error creating post:", error);
-        }
-    }
-
-    // Helps user navigate back to the homepage
-    const handleClick = () => {
-        navigate('/users')
-      }
-  
-    return (
-      <div>
-
-        <section>
-          <h1>Kingdom Communit-E</h1>
-          <button onClick={handleClick}> Back </button>
-        </section>
-  
-        <section>
-          <form onSubmit={handleSubmitPost}>
-            <h3>Post Form</h3>
-  
-            <label> Post: </label>
-            <input 
+      {/* Post Form Section */}
+      <section className={styles.formSection}>
+        <form onSubmit={handleSubmitPost}>
+          <h3>Post Form</h3>
+          <div className={styles.formGroup}>
+            <label>Post:</label>
+            <input
               type="text"
               name="post"
               value={createPost.post}
               onChange={handleChangePost}
             />
-  
-            <label> Image URL: </label>
-            <input 
+          </div>
+          <button type="submit">Add Post</button>
+        </form>
+      </section>
+
+      {/* Event Form Section */}
+      <section className={styles.formSection}>
+        <form onSubmit={handleSubmitEvent}>
+          <h3>Event Form</h3>
+          <div className={styles.formGroup}>
+            <label>Event:</label>
+            <input
               type="text"
-              name="imageurl"
-              value={createPost.imageurl}
-              onChange={handleChangePost}
+              name="post"
+              value={createEvent.post}
+              onChange={handleChangeEvent}
             />
-  
-            <button type="submit">Add Post</button>
-          </form>
-        </section>
+          </div>
+         
+          <div className={styles.formGroup}>
+            <label>Location:</label>
+            <input
+              type="text"
+              name="userLocation"
+              value={createEvent.userLocation}
+              onChange={handleChangeEvent}
+            />
+          </div>
+          <button type="submit">Add Event</button>
+        </form>
+      </section>
 
-        <section>
-            <form onSubmit={handleSubmitEvent}>
-                <h3>Event Form</h3>
-  
-                <label> Event: </label>
-                <input 
-                  type="text"
-                  name="post"
-                  value={createEvent.post}
-                  onChange={handleChangeEvent}
-                />
-  
-                <label> Image URL: </label>
-                <input 
-                  type="text"
-                  name="imageurl"
-                  value={createEvent.imageurl}
-                  onChange={handleChangeEvent}
-                />
+      {/* Urgent Post Form Section */}
+      <section className={styles.formSection}>
+        <form onSubmit={handleSubmitUrgentPost}>
+          <h3>Urgent Post Form</h3>
+          <div className={styles.formGroup}>
+            <label>Urgent Post:</label>
+            <input
+              type="text"
+              name="post"
+              value={createUrgentPost.post}
+              onChange={handleChangeUrgentPost}
+            />
+          </div>
 
-                <label> Location: </label>
-                <input 
-                  type="text"
-                  name="userLocation"
-                  value={createEvent.userLocation}
-                  onChange={handleChangeEvent}
-                />
-  
-                <button type="submit">Add Event</button>
-          </form>
-        </section>
+          <div className={styles.formGroup}>
+            <label>Location:</label>
+            <input
+              type="text"
+              name="userLocation"
+              value={createUrgentPost.userLocation}
+              onChange={handleChangeUrgentPost}
+            />
+          </div>
+          <button type="submit">Add Urgent Post</button>
+        </form>
+      </section>
+    </div>
+  );
+}
 
-        <section>
-            <form onSubmit={handleSubmitUrgentPost}>
-                <h3>Urgent Post Form</h3>
-  
-                <label> Urgent Post: </label>
-                <input 
-                  type="text"
-                  name="post"
-                  value={createUrgentPost.post}
-                  onChange={handleChangeUrgentPost}
-                />
-  
-                <label> Image URL: </label>
-                <input 
-                  type="text"
-                  name="imageurl"
-                  value={createUrgentPost.imageurl}
-                  onChange={handleChangeUrgentPost}
-                />
-
-                <label> Location: </label>
-                <input 
-                  type="text"
-                  name="userLocation"
-                  value={createUrgentPost.userLocation}
-                  onChange={handleChangeUrgentPost}
-                />
-  
-                <button type="submit">Add Urgent Post</button>
-          </form>
-        </section>
-
-      </div>
-    );
-  }
-  
-  export default CreatePost;
+export default CreatePost;

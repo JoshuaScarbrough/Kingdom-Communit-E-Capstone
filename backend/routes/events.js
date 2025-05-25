@@ -44,8 +44,13 @@ router.post('/:id/specificEvent', async function (req, res, next){
         if(data){
 
             const fullPost = await Event.getFullEvent(eventId)
+
+            if(!fullPost){
+                return res.status(404).json({message: "No event found"})
+            }else{
+                return res.status(200).send(fullPost)
+            }
     
-            return res.send(fullPost)
         }
 
     }catch(e){
@@ -64,6 +69,10 @@ router.post('/:id', async function (req, res, next){
 
             const {post, imageUrl, userLocation} = req.body
             const newEvent = await User.createEvent(data.username, post, imageUrl, userLocation)
+
+            if(!newEvent){
+                return res.status(404).json({message: "Event not created"})
+            }
             
             const extractEvent = newEvent.row.replace(/[()]/g, "").split(',');
 
@@ -94,14 +103,18 @@ router.delete('/:id', async function (req, res, next){
 
         if(data){
 
-            console.log("Look here", eventId)
-
             // Checks if post exsist
             const event = await db.query(`SELECT * FROM events WHERE id = $1`, [eventId]);
             if(event){
 
                 const deletePost = await User.deleteEvent(eventId, data.id)
-                res.status(200).json({message: 'Event deleted Sucessfully', deletePost})
+                if(!deletePost){
+                     res.status(200).json({message: 'Event deleted Sucessfully', deletePost})
+                }else{
+                    return res.status(404).json({message: "Event not Deleted"})
+                }
+            }else{
+                return res.status(404).json({message: "Event not found"})
             }
         }
 
@@ -121,7 +134,14 @@ router.post('/:id/likeEvent', async function(req, res, next){
         if(data){
             const likeEvent = await Event.likeEvent(data.id, eventId)
 
-            res.status(200).json({likeEvent})
+            if(!likeEvent){
+                return res.status(404).json({message: "Event not found"})
+            }
+            if(likeEvent === "Already liked"){
+                return res.status(404).json({message: "Event already liked"})
+            }else{
+                return res.status(200).json({likeEvent})
+            }
 
         }
 
@@ -167,9 +187,12 @@ router.post('/:id/commentEvent', async function(req, res, next){
         if(data){
 
             let commentEvent = await Event.addComment(user_id, eventId, comment);
-            commentEvent = commentEvent.rows;
+            if(!commentEvent){
+                return res.status(404).json({message: "Event not found"})
+            }
 
-            return res.send({message: commentEvent})
+            commentEvent = commentEvent.rows;
+            return res.status(200).send({message: commentEvent})
         }
 
     }catch(e){

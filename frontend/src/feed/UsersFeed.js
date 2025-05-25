@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"
 import {jwtDecode} from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
-
+import "./UsersFeed.module.css";  // Import the module CSS
 
 function UserFeed(){
     const navigate = useNavigate();
@@ -21,12 +21,24 @@ function UserFeed(){
         const [followingEvent, setFollowingEvent] = useState(null);
         const [followingUrgentPost, setFollowingUrgentPost] = useState(null);
 
+        // State to toggle the display of the user posts section (posts, events, urgent posts)
+        const [showUserPosts, setShowUserPosts] = useState(false);
+        
+        const [showFollowingPosts, setShowFollowingPosts] = useState(false);
+
         // The token is grabbed out of the sessionStorage, then decoded and the userId is grabbed out to put into the parameter string for the api request
         const token = sessionStorage.getItem("token");
         const decoded = token ? jwtDecode(token) : null;
         const userId = decoded ? decoded.id : null;
 
         useEffect(() => {
+
+            // Makes sure that if there is no token you are re-routed back to the homepage
+            if(token == null){
+                alert("Please Login")
+                navigate("/")
+                return; // Stops further execution
+            }
 
             const fetchFeed = async () => {
 
@@ -95,6 +107,7 @@ function UserFeed(){
     
                     commentUser = commentUser.data
                     commentUser = commentUser[0]
+                    
 
                     if(commentUser){
                         const commentUserUsername = commentUser.username
@@ -108,16 +121,17 @@ function UserFeed(){
 
                     // Only render if commentData exists.
                     return commentData ? (
-
-                        <ul>
-                            <li key={commentItem.id}>
-                            User: {getCommentedUser()},
-                            Comment: {commentData},
-                            Date Posted: {commentDate},
-                            Time Posted: {commentTime}
-                            </li>
-                        </ul>
-                        ) : null;
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
+                                </li>
+                            </ul>
+                            ) : null;
                     });
 
                     if(post.id){
@@ -169,19 +183,43 @@ function UserFeed(){
 
                             navigate("/users/feed/commentPost", {state: postData})
                         }
-                    
 
+                        async function visitUserHomepage(evt){
+                            evt.preventDefault();
+                            const otherId = post.user_id
+
+                            let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                token,
+                                otherId
+                            })
+                            response = response.data
+
+                            navigate("/users/VisitUser", {state: response})
+                        }
+                    
                         return (
                             <div key={post.id} className="post">
-                                <h1> {getPostUser()} Post </h1>
-                                <h3>{post.post}</h3>
-                                <button onClick={handleLikePost}> Like </button>
-                                <button onClick={handleCommentPost}> Comment </button>
-                                <p> Date Posted: {post.dateposted} </p>
-                                <p> Time Posted: {post.timeposted} </p>
-                                <p> Number of Likes: {post.numlikes} </p>
-                                <p> Number of Comments: {post.numcomments} </p>
-                                <h4>Comments:</h4>
+
+                                <section className="post-section">   
+                                    <section>
+                                        <h2>{getPostUser()} Post</h2>
+                                        <button onClick={visitUserHomepage}> Visit User </button>
+                                        <h3>{post.post}</h3>
+                                        <button onClick={handleLikePost}> Like </button>
+                                        <button onClick={handleCommentPost}> Comment </button>
+                                    </section>
+
+                                    <section>
+                                        <p>Date Posted: {post.dateposted}</p>
+                                        <p>Time Posted: {post.timeposted}</p>
+                                    </section>
+
+                                    <section>
+                                        <p>Likes: {post.numlikes}</p>
+                                        <p>Comments: {post.numcomments}</p>
+                                    </section>
+                                </section>
+                                <h4>Comments</h4>
                             {mappedComments.length > 0 ? (
                                 <ul>{mappedComments}</ul>
                             ) : (
@@ -191,6 +229,7 @@ function UserFeed(){
                         );
 
                     }
+
                     });
 
                     setPosts(mappedPosts)
@@ -203,7 +242,6 @@ function UserFeed(){
 
                     const mappedEvents = feedEvents.map((postItem) => {
                     const { event, comments } = postItem;
-                    
 
                     // Use Array.flat() to flatten the nested comments.
                     // If flat() is not supported, you can use reduce instead.
@@ -240,16 +278,17 @@ function UserFeed(){
 
                     // Only render if commentData exists.
                     return commentData ? (
-
-                        <ul>
-                            <li key={commentItem.id}>
-                            User: {getCommentedUser()},
-                            Comment: {commentData},
-                            Date Posted: {commentDate},
-                            Time Posted: {commentTime}
-                            </li>
-                        </ul>
-                        ) : null;
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
+                                </li>
+                            </ul>
+                            ) : null;
                     });
 
                     if(event.id){
@@ -267,6 +306,25 @@ function UserFeed(){
                         username = username.username
                         
                         return(username)
+                        }
+
+                        // Gets the distance from the Event
+                        async function getDistanceFrom(evt){
+                            evt.preventDefault();
+                            const eventId = event.id
+
+                            try{
+                                let response = await axios.post(`http://localhost:5000/feed/${userId}/event`, {
+                                    token,
+                                    eventId
+                                })
+
+                                console.log("This is the response from the distance", response.data)
+                                alert(response.data)
+                            } catch (error){
+                                console.log("There is an error fetching the distance", error)
+                            }
+
                         }
 
                         // This is so that you can like a post from your feed
@@ -303,18 +361,44 @@ function UserFeed(){
                             navigate("/users/feed/commentEvent", {state: eventData})
                         }        
 
+                        async function visitUserHomepage(evt){
+                            evt.preventDefault();
+                            const otherId = event.user_id
+
+                            let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                token,
+                                otherId
+                            })
+                            response = response.data
+
+                            navigate("/users/VisitUser", {state: response})
+                        }
+
                         return (
-                            <div key={event.id} className="event">
-                                <h1> {getEventUser()} Event </h1>
-                                <h3>{event.post}</h3>
-                                <button onClick={handleLikeEvent}> Like </button>
-                                <button onClick={handleCommentEvent}> Comment </button>
-                                <p> Location: {event.userlocation} </p>
-                                <p> Date Posted: {event.dateposted} </p>
-                                <p> Time Posted: {event.timeposted} </p>
-                                <p> Number of Likes: {event.numlikes} </p>
-                                <p> Number of Comments: {event.numcomments} </p>
-                                <h4>Comments:</h4>
+                            <div key={event.id} className="post">
+
+                                <section className="post-section">   
+                                    <section>
+                                        <h2>{getEventUser()} Event</h2>
+                                        <h3>{event.post}</h3>
+                                        <button onClick={visitUserHomepage}> Visit User </button>
+                                        <h4> {event.userlocation} </h4>
+                                        <button onClick={getDistanceFrom}> See Distance From </button>
+                                        <button onClick={handleLikeEvent}> Like </button>
+                                        <button onClick={handleCommentEvent}> Comment </button>
+                                    </section>
+
+                                    <section>
+                                        <p>Date Posted: {event.dateposted}</p>
+                                        <p>Time Posted: {event.timeposted}</p>
+                                    </section>
+
+                                    <section>
+                                        <p>Likes: {event.numlikes}</p>
+                                        <p>Comments: {event.numcomments}</p>
+                                    </section>
+                                </section>
+                                <h4>Comments</h4>
                             {mappedComments.length > 0 ? (
                                 <ul>{mappedComments}</ul>
                             ) : (
@@ -323,7 +407,7 @@ function UserFeed(){
                             </div>
                         );
 
-                    }
+                        }
                     });
 
                     setEvents(mappedEvents)
@@ -334,7 +418,6 @@ function UserFeed(){
 
 
                 if(feedUrgentPosts){
-                    console.log(feedUrgentPosts)
 
                     const mappedUrgentPosts = flatUrgentPosts.map((postItem) => {
                     const { UrgentPost, comments } = postItem;                    
@@ -374,21 +457,21 @@ function UserFeed(){
 
                     // Only render if commentData exists.
                     return commentData ? (
-
-                        <ul>
-                            <li key={commentItem.id}>
-                            User: {getCommentedUser()},
-                            Comment: {commentData},
-                            Date Posted: {commentDate},
-                            Time Posted: {commentTime}
-                            </li>
-                        </ul>
-                        ) : null;
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
+                                </li>
+                            </ul>
+                            ) : null;
                     });
 
                     if(UrgentPost.id){
                         const userId = UrgentPost.user_id
-                        console.log("Im getting", UrgentPost.numcomments)
 
                         // Async function to get the user for their posts
                         const getUrgentPostUser = async () => {
@@ -402,6 +485,26 @@ function UserFeed(){
                         username = username.username
                         
                         return(username)
+                        }
+
+                        // Get distance from Urgent Post
+                        async function getDistanceFrom(evt){
+                            evt.preventDefault();
+                            const urgentPostId = UrgentPost.id
+            
+                            try{
+                                let response = await axios.post(`http://localhost:5000/feed/${userId}/urgentPost`, {
+                                    token,
+                                    urgentPostId
+                            })
+            
+                            console.log("This is the response from the distance", response.data)
+                            alert(response.data)
+                            } catch (error){
+                                alert("Can not locate approximate distnace between")
+                                console.log("There is an error fetching the distance", error)
+                            }
+            
                         }
 
                         // click button that is going to make a axios request that pulls up the post and navigates to a page that displays the post
@@ -418,16 +521,45 @@ function UserFeed(){
                             navigate("/users/feed/commentUrgentPost", {state: urgentPostData})
                         }
 
-                        return (
-                            <div key={UrgentPost.id} className="urgent">
-                                <h1> {getUrgentPostUser()} Urgent Post </h1>
-                                <h3>{UrgentPost.post}</h3>
-                                <button onClick={handleCommentUrgentPost}> Comment </button>
-                                <p> Location: {UrgentPost.userlocation} </p>
-                                <p> Date Posted: {UrgentPost.dateposted} </p>
-                                <p> Time Posted: {UrgentPost.timeposted} </p>
-                                <p> Number of Comments: {UrgentPost.numcomments} </p>
-                                <h4>Comments:</h4>
+                        async function visitUserHomepage(evt){
+                            evt.preventDefault();
+                            const otherId = UrgentPost.user_id
+
+                            let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                token,
+                                otherId
+                            })
+                            response = response.data
+
+                            navigate("/users/VisitUser", {state: response})
+                        }
+                    
+
+
+                         return (
+                            <div key={UrgentPost.id} className="post">
+
+                                <section className="post-section">   
+                                    <section>
+                                        <h2>{getUrgentPostUser()} Event</h2>
+                                        <h3>{UrgentPost.post}</h3>
+                                        <button onClick={visitUserHomepage}> Visit User </button>
+                                        <h4> {UrgentPost.userlocation} </h4>
+                                        <button onClick={getDistanceFrom}> See Distance From </button>
+                                        <button onClick={handleCommentUrgentPost}> Comment </button>
+                                    </section>
+
+                                    <section>
+                                        <p>Date Posted: {UrgentPost.dateposted}</p>
+                                        <p>Time Posted: {UrgentPost.timeposted}</p>
+                                    </section>
+
+                                    <section>
+                                        <p>Likes: {UrgentPost.numlikes}</p>
+                                        <p>Comments: {UrgentPost.numcomments}</p>
+                                    </section>
+                                </section>
+                                <h4>Comments</h4>
                             {mappedComments.length > 0 ? (
                                 <ul>{mappedComments}</ul>
                             ) : (
@@ -440,9 +572,9 @@ function UserFeed(){
                     });
 
                     setUrgentPosts(mappedUrgentPosts)
-                }else{
-                    console.log("Nevermind")
-                }
+                    }else{
+                        console.log("Nevermind")
+                    }
 
 
                 if(followingFeedPosts){
@@ -485,16 +617,17 @@ function UserFeed(){
 
                     // Only render if commentData exists.
                     return commentData ? (
-
-                        <ul>
-                            <li key={commentItem.id}>
-                            User: {getCommentedUser()},
-                            Comment: {commentData},
-                            Date Posted: {commentDate},
-                            Time Posted: {commentTime}
-                            </li>
-                        </ul>
-                        ) : null;
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
+                                </li>
+                            </ul>
+                            ) : null;
                     });
 
                     if(post.id){
@@ -532,20 +665,60 @@ function UserFeed(){
                             alert("Post has already been Liked")
                             console.error("Error liking Post:", error.response?.data || error.message);
                             }
-                        }     
+                        }
+                        
+                        
+                        // click button that is going to make a axios request that pulls up the post and navigates to a page that displays the post
+                        async function handleCommentPost(event){
+                            event.preventDefault()
+                            const postId = post.id
 
+                            let response = await axios.post(`http://localhost:5000/posts/${userId}/specificPost`, {
+                                token,
+                                postId
+                            })
+                            const postData = response.data
+
+                            navigate("/users/feed/commentPost", {state: postData})
+                        }
+
+                        async function visitUserHomepage(evt){
+                            evt.preventDefault();
+                            const otherId = post.user_id
+
+                            let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                token,
+                                otherId
+                            })
+                            response = response.data
+
+                            navigate("/users/VisitUser", {state: response})
+                        }
 
 
                         return (
-                            <div key={post.id} className="followingPost">
-                                <h3> {getPostUser()} Post </h3>
-                                <h5>{post.post}</h5>
-                                <button onClick={handleLikePost}> Like </button>
-                                <p> Date Posted: {post.dateposted} </p>
-                                <p> Time Posted: {post.timeposted} </p>
-                                <p> Number of Likes: {post.numlikes} </p>
-                                <p> Number of Comments: {post.numcomments} </p>
-                                <h4>Comments:</h4>
+                            <div key={post.id} className="post">
+
+                                <section className="post-section">   
+                                    <section>
+                                        <h2>{getPostUser()} Post</h2>
+                                        <h3>{post.post}</h3>
+                                        <button onClick={visitUserHomepage}> Visit User </button>
+                                        <button onClick={handleLikePost}> Like </button>
+                                        <button onClick={handleCommentPost}> Comment </button>
+                                    </section>
+
+                                    <section>
+                                        <p>Date Posted: {post.dateposted}</p>
+                                        <p>Time Posted: {post.timeposted}</p>
+                                    </section>
+
+                                    <section>
+                                        <p>Likes: {post.numlikes}</p>
+                                        <p>Comments: {post.numcomments}</p>
+                                    </section>
+                                </section>
+                                <h4>Comments</h4>
                             {mappedComments.length > 0 ? (
                                 <ul>{mappedComments}</ul>
                             ) : (
@@ -603,16 +776,17 @@ function UserFeed(){
 
                     // Only render if commentData exists.
                     return commentData ? (
-
-                        <ul>
-                            <li key={commentItem.id}>
-                            User: {getCommentedUser()},
-                            Comment: {commentData},
-                            Date Posted: {commentDate},
-                            Time Posted: {commentTime}
-                            </li>
-                        </ul>
-                        ) : null;
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
+                                </li>
+                            </ul>
+                            ) : null;// Only render if commentData exists.       
                     });
 
                     if(event.id){
@@ -630,6 +804,25 @@ function UserFeed(){
                         username = username.username
                         
                         return(username)
+                        }
+
+                        // Gets the distance from the Event
+                        async function getDistanceFrom(evt){
+                            evt.preventDefault();
+                            const eventId = event.id
+
+                            try{
+                                let response = await axios.post(`http://localhost:5000/feed/${userId}/event`, {
+                                    token,
+                                    eventId
+                                })
+
+                                console.log("This is the response from the distance", response.data)
+                                alert(response.data)
+                            } catch (error){
+                                console.log("There is an error fetching the distance", error)
+                            }
+
                         }
 
                         // This is so that you can like a post from your feed
@@ -650,20 +843,60 @@ function UserFeed(){
                             alert("Event has already been Liked")
                             console.error("Error liking Event:", error.response?.data || error.message);
                             }
-                        }  
+                        }
+                        
+                        // click button that is going to make a axios request that pulls up the post and navigates to a page that displays the post
+                        async function handleCommentEvent(evt){
+                            evt.preventDefault()
+                            const eventId = event.id
+    
+                            let response = await axios.post(`http://localhost:5000/events/${userId}/specificEvent`, {
+                                token,
+                                eventId
+                            })
+                            const eventData = response.data
+    
+                            navigate("/users/feed/commentEvent", {state: eventData})
+                        }
+                        
+                        async function visitUserHomepage(evt){
+                            evt.preventDefault();
+                            const otherId = event.user_id
 
+                            let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                token,
+                                otherId
+                            })
+                            response = response.data
+
+                            navigate("/users/VisitUser", {state: response})
+                        }
 
                         return (
-                            <div key={event.id} className="followingEvent">
-                                <h3> {getEventUser()} Event </h3>
-                                <h5>{event.post}</h5>
-                                <button onClick={handleLikeEvent}> Like </button>
-                                <p> Location: {event.userlocation} </p>
-                                <p> Date Posted: {event.dateposted} </p>
-                                <p> Time Posted: {event.timeposted} </p>
-                                <p> Number of Likes: {event.numlikes} </p>
-                                <p> Number of Comments: {event.numcomments} </p>
-                                <h4>Comments:</h4>
+                            <div key={event.id} className="post">
+
+                                <section className="post-section">   
+                                    <section>
+                                        <h2>{getEventUser()} Event</h2>
+                                        <h3>{event.post}</h3>
+                                        <button onClick={visitUserHomepage}> Visit User </button>
+                                        <h4> {event.userlocation} </h4>
+                                        <button onClick={getDistanceFrom}> See Distance From </button>
+                                        <button onClick={handleLikeEvent}> Like </button>
+                                        <button onClick={handleCommentEvent}> Comment </button>
+                                    </section>
+
+                                    <section>
+                                        <p>Date Posted: {event.dateposted}</p>
+                                        <p>Time Posted: {event.timeposted}</p>
+                                    </section>
+
+                                    <section>
+                                        <p>Likes: {event.numlikes}</p>
+                                        <p>Comments: {event.numcomments}</p>
+                                    </section>
+                                </section>
+                                <h4>Comments</h4>
                             {mappedComments.length > 0 ? (
                                 <ul>{mappedComments}</ul>
                             ) : (
@@ -721,16 +954,17 @@ function UserFeed(){
 
                     // Only render if commentData exists.
                     return commentData ? (
-
-                        <ul>
-                            <li key={commentItem.id}>
-                            User: {getCommentedUser()},
-                            Comment: {commentData},
-                            Date Posted: {commentDate},
-                            Time Posted: {commentTime}
-                            </li>
-                        </ul>
-                        ) : null;
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
+                                </li>
+                            </ul>
+                            ) : null;
                     });
 
                     if(UrgentPost.id){
@@ -750,17 +984,77 @@ function UserFeed(){
                         return(username)
                         }
 
+                        // Get distance from Urgent Post
+                        async function getDistanceFrom(evt){
+                            evt.preventDefault();
+                            const urgentPostId = UrgentPost.id
+            
+                            try{
+                                let response = await axios.post(`http://localhost:5000/feed/${userId}/urgentPost`, {
+                                    token,
+                                    urgentPostId
+                            })
+            
+                            console.log("This is the response from the distance", response.data)
+                            alert(response.data)
+                            } catch (error){
+                                alert("Can not locate approximate distnace between")
+                                console.log("There is an error fetching the distance", error)
+                            }
+            
+                        }
 
+                        // click button that is going to make a axios request that pulls up the post and navigates to a page that displays the post
+                        async function handleCommentUrgentPost(event){
+                            event.preventDefault()
+                            const urgentPostId = UrgentPost.id
+
+                            let response = await axios.post(`http://localhost:5000/urgentPosts/${userId}/specificUrgentPost`, {
+                                token,
+                                urgentPostId
+                            })
+                            const urgentPostData = response.data
+
+                            navigate("/users/feed/commentUrgentPost", {state: urgentPostData})
+                        }
+
+                        async function visitUserHomepage(evt){
+                            evt.preventDefault();
+                            const otherId = UrgentPost.user_id
+
+                            let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                token,
+                                otherId
+                            })
+                            response = response.data
+
+                            navigate("/users/VisitUser", {state: response})
+                        }
 
                         return (
-                            <div key={UrgentPost.id} className="followingEvent">
-                                <h3> {getUrgentPostUser()} Urgent Post </h3>
-                                <h5>{UrgentPost.post}</h5>
-                                <p> Location: {UrgentPost.userlocation} </p>
-                                <p> Date Posted: {UrgentPost.dateposted} </p>
-                                <p> Time Posted: {UrgentPost.timeposted} </p>
-                                <p> Number of Comments: {UrgentPost.numcomments} </p>
-                                <h4>Comments:</h4>
+                            <div key={UrgentPost.id} className="post">
+
+                                <section className="post-section">   
+                                    <section>
+                                        <h2>{getUrgentPostUser()} Event</h2>
+                                        <h3>{UrgentPost.post}</h3>
+                                        <button onClick={visitUserHomepage}> Visit User </button>
+                                        <h4> {UrgentPost.userlocation} </h4>
+                                        <button onClick={getDistanceFrom}> See Distance From </button>
+                                        <button onClick={handleCommentUrgentPost}> Comment </button>
+                                    </section>
+
+                                    <section>
+                                        <p>Date Posted: {UrgentPost.dateposted}</p>
+                                        <p>Time Posted: {UrgentPost.timeposted}</p>
+                                    </section>
+
+                                    <section>
+                                        <p>Likes: {UrgentPost.numlikes}</p>
+                                        <p>Comments: {UrgentPost.numcomments}</p>
+                                    </section>
+                                </section>
+                                <h4>Comments</h4>
                             {mappedComments.length > 0 ? (
                                 <ul>{mappedComments}</ul>
                             ) : (
@@ -785,50 +1079,104 @@ function UserFeed(){
             fetchFeed();
 
         }, [])
-        
 
+  return (
+    <div>
+      {/* Navigation Section */}
+      <section className="nav-section">
+        <nav>
+          <h1>Kingdom Communit-E</h1>
+          <Link to="/">Logout</Link>
+          <Link to="/users">Homepage</Link>
+        </nav>
+      </section>
 
-    return(
-        <div>
+      <div className="user-feed-layout">
+        {/* Sidebar (User Info Section) */}
+        <aside className="sidebar">
+          <section className="user-info-section">
+            <a href="/users">
+              <h2>{username}</h2>
+            </a>
+            <img src={profilePic} alt="Profile" width="200" height="200" />
+          </section>
+        </aside>
 
-            <section>
-                <h1> Kingdom Communit-E </h1>
-            </section>
+        {/* Main Content Area */}
+        <main className="main-content">
+          {/* User Posts Section */}
+          <section className="user-posts-section">
+            <header className="posts-section-header">
+              Communit-E Feed
+            </header>
+            <button
+              className="toggle-posts-btn"
+              onClick={() => setShowUserPosts(!showUserPosts)}
+            >
+              {showUserPosts ? "Hide All Posts" : "Show All Posts"}
+            </button>
+            {showUserPosts && (
+              <>
+                <section>
+                  <div className="posts-container">
+                    <h2 className="posts-header"> Communit-E Posts</h2>
+                    {posts}
+                  </div>
+                </section>
+                <section>
+                  <div className="posts-container">
+                    <h2 className="posts-header"> Upcoming Events</h2>
+                    {events}
+                  </div>
+                </section>
+                <section>
+                  <div className="posts-container">
+                    <h2 className="posts-header"> Hurry someone needs help!! </h2>
+                    {urgentPosts}
+                  </div>
+                </section>
+              </>
+            )}
+          </section>
 
-            <section>
-                <a href="/users"> <h3> {username} </h3> </a>
-                <img src={profilePic} width="200" height="200"></img>
-            </section>
-
-            <section>
-                {posts}
-            </section>
-
-            <section>
-                {events}
-            </section>
-
-            <section>
-                {urgentPosts}
-            </section>
-            
-            <section>
-                <h1> {username}'s Following Posts </h1>
-                {followingPost}
-            </section>
-
-            <section>
-                <h1> {username}'s Following Events </h1>
-                {followingEvent}
-            </section>
-
-            <section>
-                <h1> {username}'s Following Urgent Posts </h1>
-                {followingUrgentPost}
-            </section>
-            
-        </div>
-    )
+          {/* User Following Section */}
+          <section className="user-following-section">
+            <header className="posts-section-header">
+              {username}'s Following Content
+            </header>
+            <button
+              className="toggle-posts-btn"
+              onClick={() => setShowFollowingPosts(!showFollowingPosts)}
+            >
+              {showFollowingPosts ? "Hide Following Posts" : "Show Following Posts"}
+            </button>
+            {showFollowingPosts && (
+              <>
+                <section>
+                  <div className="posts-container">
+                    <h2 className="posts-header">{username}'s Following Posts</h2>
+                    {followingPost}
+                  </div>
+                </section>
+                <section>
+                  <div className="posts-container">
+                    <h2 className="posts-header">{username}'s Following Events</h2>
+                    {followingEvent}
+                  </div>
+                </section>
+                <section>
+                  <div className="posts-container">
+                    <h2 className="posts-header">{username}'s Following Urgent Posts</h2>
+                    {followingUrgentPost}
+                  </div>
+                </section>
+              </>
+            )}
+          </section>
+        </main>
+      </div>
+    </div>
+  );
 }
 
 export default UserFeed

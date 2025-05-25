@@ -11,6 +11,12 @@ const {DISTANCE_API_KEY} = require("../config.js");
 class LatLon{
 
     static async checkAddress(address){
+
+        // This returns undefined just in case the user does not insert an address
+        if(address === undefined){
+            return undefined
+        }
+
         let coordinatesReq = await axios.get(`https://geocode.maps.co/search?q=${address}&api_key=${COORDINATE_API_KEY}`);
         coordinatesReq = coordinatesReq.data[0]
 
@@ -32,11 +38,10 @@ class LatLon{
 
         // Extracts the address from the user
         const userAddress = user.useraddress
-        console.log(userAddress)
         
         let coordinatesReq = await axios.get(`https://geocode.maps.co/search?q=${userAddress}&api_key=${COORDINATE_API_KEY}`);
+
         coordinatesReq = coordinatesReq.data[0]
-        console.log(coordinatesReq.data)
         
         const latitude = coordinatesReq.lat
         const longitdue = coordinatesReq.lon
@@ -53,10 +58,8 @@ class LatLon{
     static async getBothUserCoordinates(user_id, compareUser_id){
 
         const userCoordinates = await LatLon.userCoordinates(user_id)
-        console.log(userCoordinates)
 
         const compareCoordinates = await LatLon.userCoordinates(compareUser_id)
-        console.log(compareCoordinates)
 
         const coordinatePair = {
             userCoordinates: userCoordinates,
@@ -70,7 +73,6 @@ class LatLon{
 
         // Gets the pair of coordinates from the User and the other coordinates
         const coordinates = await LatLon.getBothUserCoordinates(user_id, compareUser_id);
-        console.log(coordinates)
 
         // Gets the origin lat and long for the API
         const originLatLon = coordinates.userCoordinates
@@ -94,12 +96,10 @@ class LatLon{
 
         // Gets the users lat and long
         const userCoordinates = await LatLon.userCoordinates(user_id);
-        console.log(userCoordinates)
 
         // Gets the event and its location
         const event = await Event.getEvent(event_id)
         const eventLocation = event.userlocation
-        console.log(eventLocation)
 
         // Event Coordinates
         let coordinates = await axios.get(`https://geocode.maps.co/search?q=${eventLocation}&api_key=${COORDINATE_API_KEY}`);

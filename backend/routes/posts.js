@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const { createToken } = require("../helpers/tokens")
 const { SECRET_KEY } = require("../config");
 const User = require("../models/user");
-const Post = require("../models/posts");
+const Post = require("../models/posts")
 
 /**
  * Everything for a post
@@ -27,8 +27,14 @@ router.get('/:id', async function (req, res, next){
         if(data){
 
             const post = await Post.getAllFullPosts(data.id)
+            console.log("Post", post)
+
+            if(!post){
+                return res.status(404).json({message: "No posts found"})
+            }else{
+                return res.status(200).json({message: "Posts found", post})
+            }
     
-            return res.send(post)
         }
 
     }catch(e){
@@ -47,9 +53,12 @@ router.post('/:id/specificPost', async function (req, res, next){
 
 
             const fullPost = await Post.getFullPost(postId)
-    
-            return res.send(fullPost)
 
+            if(!fullPost){
+                return res.status(404).json({message: "No post found"}) 
+            }else{
+                 return res.status(200).send(fullPost)
+            }
             
         }
 
@@ -61,7 +70,6 @@ router.post('/:id/specificPost', async function (req, res, next){
 // Create a post
 router.post('/:id', async function (req, res, next){
     const {token} = req.body;
-    console.log(token)
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
@@ -70,9 +78,16 @@ router.post('/:id', async function (req, res, next){
         if(data){
 
             const {post} = req.body
-            console.log(post)
+
+            if(!post){
+                return res.status(400).json({message: "Post is required"})
+            }
 
             const newPost = await User.createPost(data.username, post)
+
+            if(!newPost){
+                return res.status(400).json({message: "Post not created"})
+            }
 
             const extractPost = newPost.row.replace(/[()]/g, "").split(',');
                 
@@ -95,18 +110,18 @@ router.post('/:id', async function (req, res, next){
 // Delete a post 
 router.delete('/:id', async function (req, res, next){
     const {token, postId} = req.body;
-    console.log(token, postId)
     const data = jwt.verify(token, SECRET_KEY);
     
     try{
 
         if(data){
 
-            console.log("Look here", postId)
-
             // Checks if post exsist
             const posts = await db.query(`SELECT * FROM posts WHERE id = $1`, [postId]);
 
+            if(!posts){
+                return res.status(404).json({message: "Post not found"})
+            }
             if(posts){
 
                 const deletePost = await User.deletePost(postId, data.id)
@@ -129,7 +144,11 @@ router.post('/:id/likePost', async function(req, res, next){
         if(data){
             const likePost = await Post.likePost(data.id, postId)
 
-            res.status(200).json({likePost})
+            if(!likePost){
+                return res.status(404).json({message: "Post not found"})
+            }else{
+                return res.status(200).json({likePost})
+            }
 
         }
 
@@ -153,6 +172,8 @@ router.delete('/:id/unlikePost', async function(req, res, next){
                 unlike;
 
                 res.status(200).json({message: "Post unliked"})
+            }else{
+                return res.status(404).json({message: "Post not found"})
             }
 
         }
@@ -172,8 +193,12 @@ router.post('/:id/commentPost', async function(req, res, next){
         if(data){
 
             let commentPost = await Post.addComment(data.id, postId, comment);
-            
-            return res.send({message: commentPost})
+
+            if(!commentPost){
+                return res.status(404).json({message: "Post not found"})
+            }else{
+                return res.status(200).json({message: "Comment added", commentPost})
+            }
         }
 
     }catch(e){

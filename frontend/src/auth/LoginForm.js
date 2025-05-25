@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
+import "./LoginForm.css";
 
 /** Login form.
  *
@@ -12,8 +13,10 @@ import { Link, useNavigate } from "react-router-dom";
  */
 
 function LoginForm() {
-
     const navigate = useNavigate();
+
+    // Clears all the data from the session so that a user must re-enter their username and password
+    sessionStorage.clear()
     
     // This is the user peice of state that updates
     const [loginUser, setLoginUser] = useState("");
@@ -31,17 +34,22 @@ function LoginForm() {
 
   async function handleSubmit(evt) {
     evt.preventDefault();
-    
-      const response = await axios.post("http://localhost:5000/auth/login", {
+
+      let response = await axios.post("http://localhost:5000/auth/login", {
         loginUser
       });
+      response = response.data
+      console.log("This is the response", response)
 
-      alert(response.data.message)
-      sessionStorage.setItem("token", response.data.token)
-      console.log("Stored Token:", sessionStorage.getItem("token"))
+      if(response.message == 'The username / password is incorrect'){
+        alert(response.message)
+        navigate("/auth/login")
+      }else{
+        sessionStorage.setItem("token", response.token)
+        alert(response.message)
+        navigate("/users");
+      }
       
-      // Need to refine this to be more RESTFUL
-      navigate("/users");
   }
 
     return(
@@ -78,7 +86,7 @@ function LoginForm() {
                 />
 
                 <button onSubmit={handleSubmit} >
-                  Login in
+                  Login
                 </button>
                 
             </form>

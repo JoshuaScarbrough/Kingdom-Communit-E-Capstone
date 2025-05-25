@@ -1,0 +1,108 @@
+/* Global styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #FFFFF0; /* Ivory */
+  background: linear-gradient(135deg, #00AEEF 0%, #FFD700 60%, #FFFFF0 100%); /* Heavenly Blue to Gold */
+  background-attachment: fixed;
+}
+
+/* Centering the form */
+.container {
+  width: 100%;
+  max-width: 420px;
+  margin: 50px auto;
+  padding: 25px;
+  background: #FFFFF0; /* Ivory */
+  border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(138, 105, 8, 0.3); /* Deep Bronze Shadow */
+}
+
+/* Title styles */
+h1 {
+  text-align: center;
+  color: #DAA520; /* Rich Gold */
+  font-weight: bold;
+}
+
+h2 {
+  text-align: center;
+  color: #00AEEF; /* Heavenly Blue */
+  font-style: italic;
+}
+
+/* Navigation links */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #FFFFF0; /* Ivory */
+  font-weight: bold;
+  transition: color 0.3s ease-in-out;
+}
+
+nav a:hover {
+  color: #FFD700; /* Golden Yellow */
+}
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #DAA520; /* Rich Gold */
+  margin-bottom: 5px;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #FFD700; /* Golden Yellow */
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease-in-out;
+}
+
+input:focus {
+  border-color: #00AEEF; /* Heavenly Blue */
+  outline: none;
+}
+
+/* Button styles */
+button {
+  padding: 12px;
+  background-color: #DAA520; /* Rich Gold */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #FFD700; /* Golden Yellow */
+}
+
+/* Error message styling */
+.error {
+  color: #FFD700; /* Golden Yellow */
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+}

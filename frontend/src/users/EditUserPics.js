@@ -30,6 +30,13 @@ function EditUserPics(){
 
     // Fetch the user data once when the component mounts or if userId changes.
     useEffect(() => {
+
+      // Makes sure that if there is no token you are re-routed back to the homepage
+      if(token == null){
+        alert("Please Login")
+        navigate("/")
+        return; // Stops further execution
+    }
         async function getUser() {
         try {
             // Makes a call to the API that gets the user

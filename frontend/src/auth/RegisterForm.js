@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
+import "./RegisterForm.css";
 
 /** Signup form.
  *
@@ -12,8 +13,10 @@ import { Link, useNavigate } from "react-router-dom";
  */
 
 function RegisterForm(){
-
     const navigate = useNavigate();
+
+    // Clears all the data from the session so that a user must re-enter their username and password
+    sessionStorage.clear()
 
     // This is the user peice of state that updates
     const [user, setUser] = useState("");
@@ -37,9 +40,15 @@ function RegisterForm(){
       const response = await axios.post("http://localhost:5000/auth/register", {
         user
       });
+      console.log(response.data)
 
       alert(response.data.message)
-      navigate("/");
+
+      if(response.data.message == 'User registered successfully'){
+        navigate("/auth/login")
+      }else{
+        navigate("/auth/register");
+      }
   }
 
   // Returns the Signup Form
@@ -55,7 +64,7 @@ function RegisterForm(){
             <h1> Kingdom Communit-E </h1>
         </section>
 
-        <h2> Enter the Kingdom </h2>
+        <h2> Become a Kingdom Citizen </h2>
 
         
         <section>

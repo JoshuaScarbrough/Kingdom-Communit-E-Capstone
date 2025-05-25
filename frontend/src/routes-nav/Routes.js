@@ -13,7 +13,7 @@ import UserFeed from "../feed/UsersFeed";
 import CommentPost from "../feed/CommentPost";
 import CommentEvent from "../feed/commentEvent";
 import CommentUrgentPost from "../feed/commentUrgentPost";
-
+import VisitingUsersHomepage from "../users/VisitingUserHomepage";
 
 
 /**
@@ -43,7 +43,7 @@ function AllRoutes({login, signup}){
                 <Route path="/users/feed/commentPost" element={<CommentPost />} />
                 <Route path="/users/feed/commentEvent" element={<CommentEvent />} />
                 <Route path="/users/feed/commentUrgentPost" element={<CommentUrgentPost />} />
-
+                <Route path="/users/visitUser" element={<VisitingUsersHomepage />} />
 
             </Routes>
     );

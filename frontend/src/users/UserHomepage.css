@@ -1,0 +1,450 @@
+/*Reset and global box-sizing rules*/
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  box-sizing: border-box;
+}
+
+/* Ensure all elements use the same box-sizing model */
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Centering the container */
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #FFFFF0; /* Ivory */
+  border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(138, 105, 8, 0.3); /* Deep Bronze Shadow */
+}
+
+/* Navbar styling */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #DAA520; /* Rich Gold */
+  border-radius: 8px;
+  position: fixed; /* Keeps navbar at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  margin-bottom: 0; /* Ensures no margin below the navbar */
+}
+
+/* Title styling (Always visible, positioned at the top) */
+nav h1 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #FFFFF0; /* Ivory */
+  text-shadow: 2px 2px 4px rgba(218, 165, 32, 0.5);
+  margin: 0;
+  padding: 5px 15px;
+}
+
+/* Profile section */
+.profile-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-section h1 {
+  font-size: 35px;
+  font-weight: bold;
+  color: #00AEEF; /* Heavenly Blue */
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.profile-section h1:hover {
+  transform: scale(1.1);
+  color: #FFD700; /* Golden Yellow */
+}
+
+/* Cover photo styling */
+.cover-photo {
+  width: 100%; /* Full width */
+  height: 250px; /* Fixed height */
+  object-fit: cover; /* Ensures the image scales while maintaining aspect ratio */
+  border-radius: 0; /* Removes any rounding */
+  display: block;
+  margin: 0;
+}
+
+/* User section - Full width */
+.user-section {
+  width: 100%;
+  padding: 20px;
+  border: 3px solid #DAA520; /* Rich Gold */
+  background-color: #FFFFF0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column; /* Stacks the user-info and button-group vertically */
+  align-items: flex-start; /* Aligns contents to the left */
+}
+
+/* New styling: Side by side profile picture and username */
+.user-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;             /* Space between image and text */
+  width: 100%;
+  justify-content: flex-start; /* Left align */
+  margin-bottom: 20px;         /* Space below the info block */
+}
+
+/* Profile picture styling */
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 3px solid #DAA520; /* Gold border */
+}
+
+/* Remove link styling for the username if not needed */
+.user-section a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Username styling */
+.user-section h1 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #00AEEF; /* Heavenly Blue */
+  text-align: left;
+  margin: 10px 0;
+}
+
+/* Bio Section Styling */
+.bio-section {
+  width: 100%;
+  padding: 20px;           /* Overall padding can be adjusted as needed */
+  background-color: #FFFFF0; /* Ivory background to maintain readability */
+  text-align: left;        /* Forces text to start on the left */
+  box-sizing: border-box;  /* Ensures padding doesn’t add extra width */
+}
+
+.bio-section h4 {
+  margin: 0 0 10px;        /* Removes extra top margin and adds space below header */
+  font-size: 24px;         /* Larger font for clarity */
+  font-family: 'Poppins', sans-serif;
+  color: #DAA520;          /* Rich Gold for contrast */
+}
+
+.bio-section p {
+  margin: 0;
+  font-size: 16px;         /* Readable font size */
+  line-height: 1.6;        /* Improved readability with comfortable line spacing */
+  color: #333333;          /* Dark text for maximum contrast on the Ivory background */
+}
+
+/* Button group - Display buttons in a horizontal row */
+.button-group {
+  width: 100%;
+  display: flex;
+  flex-direction: row; /* Align children in a row */
+  gap: 10px;         /* Space between buttons */
+  justify-content: space-between; /* Optional: distribute evenly */
+  align-items: center;
+}
+
+/* Button styles within the horizontal group */
+.button-group button,
+.button-group input[type="button"] {
+  flex: 1;                    /* Each button takes equal width */
+  padding: 10px;
+  font-size: 14px;
+  background-color: #DAA520;  /* Rich Gold */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.button-group button:hover,
+.button-group input[type="button"]:hover {
+  background-color: #FFD700;  /* Golden Yellow on hover */
+}
+
+/* User image section */
+img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #DAA520; /* Rich Gold */
+}
+
+/* Buttons */
+button {
+  padding: 12px;
+  background-color: #8B6508; /* Deep Bronze */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #FFD700; /* Golden Yellow */
+}
+
+/* Input buttons */
+input[type="button"] {
+  padding: 10px;
+  background-color: #DAA520; /* Rich Gold */
+  color: #FFFFF0; /* Ivory */
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+input[type="button"]:hover {
+  background-color: #FFD700; /* Golden Yellow */
+}
+
+/* Bio section */
+.bio-section h4 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #DAA520; /* Rich Gold */
+}
+
+.bio-section p {
+  font-size: 16px;
+  color: #555; /* Subtle contrast */
+}
+/* Optional: Container for the posts section for a unified look */
+.posts-container {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  background: #FFFFF0;            /* Ivory background */
+  border: 2px solid #DAA520;        /* Rich Gold border */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(138, 105, 8, 0.2); /* Subtle golden shadow */
+  box-sizing: border-box;
+}
+
+/* Styling for the posts header to make it more prominent */
+.posts-header {
+  font-family: 'Poppins', sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #00AEEF;                  /* Heavenly Blue text */
+  background-color: #FFFFF0;       /* Ivory background for the header */
+  padding: 15px 20px;
+  border-left: 5px solid #DAA520;   /* Accent border in Rich Gold */
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(138, 105, 8, 0.2); /* Adds depth */
+}
+
+/* Posts & events section */
+.post-container h2,
+.post-container h3 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00AEEF; /* Heavenly Blue */
+}
+
+.post-container div {
+  margin-top: 15px;
+  padding: 15px;
+  background: #FFFFF0; /* Ivory */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(138, 105, 8, 0.2); /* Soft Golden Shadow */
+}
+
+/* Container for all posts: centers content and limits max-width */
+.posts-container {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+/* Styling for each individual post */
+.post {
+  background: #FFFFF0;            /* Ivory, matching the homepage container */
+  border: 2px solid #DAA520;        /* Rich Gold border for continuity */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(138, 105, 8, 0.2); /* Soft golden shadow for depth */
+  font-family: 'Poppins', sans-serif; /* Consistent typography */
+  color: #333;                    /* Dark text for readability */
+}
+
+/* Post header styling for author or title, using Heavenly Blue */
+.post-header {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00AEEF; /* Heavenly Blue for a pop of color matching your theme */
+  margin-bottom: 10px;
+}
+
+/* Post content: clean and readable */
+.post-content {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Post footer: smaller details like date or actions */
+.post-footer {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;  /* A medium gray for less prominent text */
+  text-align: right;
+}
+
+/* Arrange meta details (Date/Time and Likes/Comments) in a horizontal layout */
+.post-section > section:nth-of-type(2),
+.post-section > section:nth-of-type(3) {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Container for all comments: centers the list, removes default list styling */
+.comments-container {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  list-style: none;
+  padding: 0;
+}
+
+/* Styling for each comment */
+.comment {
+  background: #FFFFF0;            /* Ivory background */
+  border: 1px solid #DAA520;        /* Rich Gold border */
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(138, 105, 8, 0.2); /* Subtle shadow */
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+/* The header shows who posted the comment */
+.comment-header {
+  font-size: 16px;
+  font-weight: bold;
+  color: #00AEEF;  /* Heavenly Blue for a pop of color */
+  margin-bottom: 5px;
+}
+
+/* The main body message */
+.comment-body {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+/* Footer for posting details, displayed in a subtle, smaller font */
+.comment-footer {
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+
+/* Liked Post Container */
+.likedPost {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #FFFFF0;       /* Ivory background */
+  border: 2px solid #DAA520;       /* Rich Gold border */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(138, 105, 8, 0.2); /* Subtle golden shadow */
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* Header Styling */
+.likedPost h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00AEEF;   /* Heavenly Blue */
+  margin-bottom: 10px;
+}
+
+/* Post Content */
+.likedPost h5 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+/* Button Group - horizontal layout */
+.likedPost .button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Styled Buttons */
+.likedPost button {
+  background-color: #DAA520;  /* Rich Gold */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.likedPost button:hover {
+  background-color: #FFD700;  /* Golden Yellow on hover */
+}
+
+/* Paragraph and Meta Data */
+.likedPost p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+/* Comments Header */
+.likedPost h4 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #00AEEF;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Comments List Styling */
+.likedPost ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.likedPost ul li {
+  background-color: #FFFFF0;
+  border: 1px solid #DAA520;
+  border-radius: 5px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}

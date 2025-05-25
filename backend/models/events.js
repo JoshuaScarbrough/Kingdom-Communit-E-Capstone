@@ -83,8 +83,6 @@ class Event{
 
     // Function to like a Event
     static async likeEvent(user_id, event_id){
-        console.log("USER IDIDID", user_id)
-        console.log("EVENT IDIDID", event_id)
 
         // Selects user
         let user = await db.query(`SELECT * FROM users WHERE id=$1`, [user_id])
@@ -95,7 +93,6 @@ class Event{
 
         // Selects event numLikes
         let numLikes = await Event.setNumLikes(event_id);
-        console.log(" This is the current NUMLIKES Number", numLikes)
 
 
         // Likes the event
@@ -108,7 +105,6 @@ class Event{
         if(like){
 
             numLikes = numLikes + 1;
-            console.log(" This is the NEWNEWNEW NUMLIKES Number", numLikes)
 
  
             const updateLikes = await db.query(
@@ -116,7 +112,6 @@ class Event{
                 [numLikes, event_id]
             )
 
-            console.log("NUM LIKES AFTER THE uPDATE", numLikes)
             return ({message: `${user.username}, has liked a event`, event: event})
         }
 

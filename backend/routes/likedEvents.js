@@ -24,6 +24,9 @@ router.post('/:id', async function (req, res, next){
                 [data.id]
             )
             user = user.rows[0]
+            if(!user){
+                return res.status(404).send({message: "User not found"})
+            }
 
             let likedEventIds = await db.query(
                 `SELECT id from events 
@@ -36,7 +39,7 @@ router.post('/:id', async function (req, res, next){
             const ids = likedEventIds.map(post => post.id)
             const fullPost = await Promise.all(ids.map(async (id) => await Event.getFullEvent(id)))
 
-            res.send({message: "All liked Events", posts: fullPost  })
+            res.status(200).send({message: "All liked Events", posts: fullPost  })
         }
 
     }catch(e){

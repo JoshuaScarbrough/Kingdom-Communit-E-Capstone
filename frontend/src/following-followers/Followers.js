@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"
 import {jwtDecode} from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
+import styles from "./Followers.module.css"; // using module CSS
 
 function UsersFollowers() {
     const navigate = useNavigate();
@@ -18,6 +19,14 @@ function UsersFollowers() {
     });
   
     useEffect(() => {
+
+      // Makes sure that if there is no token you are re-routed back to the homepage
+      if(token == null){
+        alert("Please Login")
+        navigate("/")
+        return; // Stops further execution
+      }
+
       async function fetchUsersFollowers() {
         if (userId && token) { // check that both token and userId exist
           try {
@@ -50,20 +59,21 @@ function UsersFollowers() {
       navigate('/users')
     }
   
-    return (
-      <div>
-        <section>
-            <h1>Kingdom Communit-E</h1>
-            <button onClick={handleClick}> Back </button>
-        </section>
+     return (
+    <div className={styles.followersPage}>
+      <section className={styles.navSection}>
+        <h1>Kingdom Communit-E</h1>
+        <button className={styles.backBtn} onClick={handleClick}>
+          Back
+        </button>
+      </section>
         
-        <section>
-            <h3>{followersData.message}</h3>
-            <ul>{listItems}</ul>
-        </section>
-        
-      </div>
-    );
+      <section className={styles.followersContainer}>
+        <h3>{followersData.message}</h3>
+        <ul>{listItems}</ul>
+      </section>
+    </div>
+  );
   }
   
   export default UsersFollowers;

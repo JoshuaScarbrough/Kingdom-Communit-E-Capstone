@@ -42,8 +42,13 @@ router.post('/:id/specificUrgentPost', async function (req, res, next){
         if(data){
 
             const fullPost = await UrgentPost.getFullUrgentPost(urgentPostId)
+
+            if(!fullPost){
+                return res.status(404).json({message: "No urgent post found"})
+            }else{
+                 return res.status(200).send(fullPost)
+            }
     
-            return res.send(fullPost)
         }
 
     }catch(e){
@@ -62,6 +67,10 @@ router.post('/:id', async function (req, res, next){
 
             const {post, imageUrl, userLocation} = req.body
             const newEvent = await User.createUrgentPost(data.username, post, imageUrl, userLocation)
+
+            if(!newEvent){
+                return res.status(404).json({message: "No urgent post found"})
+            }
             
             const extractEvent = newEvent.row.replace(/[()]/g, "").split(',');
 
@@ -93,8 +102,10 @@ router.delete('/:id', async function (req, res, next){
 
             // Checks if post exsist
             const posts = await db.query(`SELECT * FROM urgentPosts WHERE id = $1`, [urgentPostId]);
+            if(posts.rows.length === 0){
+                return res.status(404).json({message: "No urgent post found"})
+            }
             if(posts){
-
                 const deletePost = await User.deleteUrgentPost(urgentPostId, data.id)
                 res.status(200).json({message: 'Urgent Post deleted Sucessfully', deletePost})
             }
@@ -117,9 +128,13 @@ router.post('/:id/commentUrgentPost', async function(req, res, next){
         if(data){
 
             let commentUrgentPost = await UrgentPost.addComment(user_id, urgentPostId, comment);
+            if(!commentUrgentPost){
+                return res.status(404).json({message: "No urgent post found"})
+            }
+
             commentUrgentPost = commentUrgentPost.rows;
 
-            return res.send({message: commentUrgentPost})
+            return res.status(200).send({message: commentUrgentPost})
         }
 
     }catch(e){

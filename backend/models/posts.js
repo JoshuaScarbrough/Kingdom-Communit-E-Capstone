@@ -102,7 +102,6 @@ class Post {
             VALUES ($1, $2) `,
             [user_id, post_id]
         )
-        console.log("This is supposed to be the like", like)
 
         if(like){
 
@@ -157,7 +156,6 @@ class Post {
 
         // Function to comment on a post in the Posts table
         static async addComment(user_id, post_id, comment){
-            console.log("We need to see what is going on right now, This is the inserted comment", comment)
 
             // Selects user
             let user = await db.query(`SELECT * FROM users WHERE id = $1`, [user_id])

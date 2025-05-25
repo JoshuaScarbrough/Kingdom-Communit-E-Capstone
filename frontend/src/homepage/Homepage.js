@@ -14,6 +14,9 @@ import "./Homepage.css";
 
 function Homepage() {
 
+    // Clears all the data from the session so that a user must re-enter their username and password
+    sessionStorage.clear()
+
 
     return(
         <div>

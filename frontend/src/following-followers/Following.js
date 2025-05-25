@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"
 import {jwtDecode} from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
-
+import styles from "./Following.module.css";
 function UsersFollowing() {
   const navigate = useNavigate();
   
@@ -21,6 +21,14 @@ function UsersFollowing() {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
+
+    // Makes sure that if there is no token you are re-routed back to the homepage
+    if(token == null){
+      alert("Please Login")
+      navigate("/")
+      return; // Stops further execution
+    }
+    
     async function fetchUserFollowing() {
       if (userId && token) {
         try {
@@ -74,19 +82,22 @@ function UsersFollowing() {
     <li key={index}>{name}</li>
   ));
 
-  return (
-    <div>
-      <section>
+ return (
+    <div className={styles.followingPage}>
+      {/* Navigation Section */}
+      <section className={styles.navSection}>
         <h1>Kingdom Communit-E</h1>
-        <button onClick={handleClick}> Back </button>
+        <button onClick={handleClick}>Back</button>
       </section>
 
-      <section>
+      {/* Following List Section */}
+      <section className={styles.listSection}>
         <h3>{followingData.message}</h3>
         <ul>{listItems}</ul>
       </section>
 
-      <section>
+      {/* Unfollow Form Section */}
+      <section className={styles.formSection}>
         <form onSubmit={handleSubmit}>
           <div>
             <label>
@@ -94,8 +105,8 @@ function UsersFollowing() {
               <input
                 type="text"
                 name="username"
-                value={username}           // Use the username state value directly.
-                onChange={handleChange}      // Update state on change.
+                value={username}
+                onChange={handleChange}
                 placeholder="Enter username"
               />
             </label>

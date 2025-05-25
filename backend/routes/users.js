@@ -19,9 +19,12 @@ router.post('/', async function getAllUsers (req, res, next){
             `SELECT * FROM users WHERE id=$1`, [id]
         )
         user = user.rows
-        console.log(`Supposed to be the user ${user}`)
 
-        return res.json(user)
+        if(!user){
+            return res.status(404).json({message: "There is no user"})
+        }else{
+            return res.json(user)
+        }
 
     }catch(e){
         next(e)
@@ -44,7 +47,11 @@ router.post('/:id', async function getUser (req, res, next){
 
             const user = results.rows[0]
 
-            return res.json({msg: `Welcome to the Kingdom ${user.username}`, user: user})
+            if(!user){
+                return res.status(404).json({message: "Could not find user"})
+            }else{
+                return res.json({msg: `Welcome to the Kingdom ${user.username}`, user: user})
+            }
         }
     } catch (e) {
         return next (e);
@@ -64,6 +71,10 @@ router.post('/:id/homepage', async function homepage (req, res, next){
         if(data){
             // Selects the user
             const user = await User.get(data.id)
+
+            if(!user){
+                return res.status(404).json({message: "Could not find user"})
+            }
 
             // Gets all the user info so that it can be used in React
             const username = user.username
@@ -113,12 +124,17 @@ router.patch("/:id/update", async function (req, res, next){
 
             // Selects the existing user
             const results = await db.query('SELECT * FROM users WHERE username = $1', [data.username])
+
+            if(results.rows.length === 0){
+                return res.status(404).json({message: "Could not find user"})
+            }
+            
+            // Selects the current user
             const currentUser = results.rows[0];
 
             // Uses spread notation to get the values for the current user and any value inserted into the req.body
             // This is incase user doesn't fill out all fields
             const update = { ...currentUser, ...req.body}
-            console.log(update)
             const userUpdated = update.updatedUser
 
             //Updates the user
@@ -159,14 +175,17 @@ router.patch("/:id/updatePhotos", async function (req, res, next){
 
            // Selects the existing user
            const results = await db.query('SELECT * FROM users WHERE username = $1', [data.username])
+
+            if(results.rows.length === 0){
+                return res.status(404).json({message: "Could not find user"})
+            }
+
            const currentUser = results.rows[0];
-           console.log(currentUser)
 
            // Uses spread notation to get the values for the current user and any value inserted into the req.body
            // This is incase user doesn't fill out all fields
            const update = { ...currentUser, ...req.body}
            const userUpdated = update.updatedUser
-           console.log("Look Here", userUpdated)
 
            //Updates the user
            const updatedResults = await db.query(
