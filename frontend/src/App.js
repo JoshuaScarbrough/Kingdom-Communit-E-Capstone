@@ -1,5 +1,5 @@
 import React from "react";
-import AllRoutes from "./routes-nav/Routes";
+import AllRoutes from "./routes-nav/Routes.js";
 import './App.css';
 
 // Super simple App component - just renders the routes

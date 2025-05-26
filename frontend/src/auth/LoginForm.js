@@ -1,104 +1,75 @@
 import React, { useState } from "react";
-import axios from "axios"
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./LoginForm.css";
 
-/** Login form.
- *
- * Shows form and manages update to state on changes.
- * On submission:
- * - calls login function prop
- *
- * Routed as /auth/login
- */
-
 function LoginForm() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    // Clears all the data from the session so that a user must re-enter their username and password
-    sessionStorage.clear()
-    
-    // This is the user peice of state that updates
-    const [loginUser, setLoginUser] = useState("");
+  // Clear session on mount
+  sessionStorage.clear();
 
+  const [loginUser, setLoginUser] = useState({});
 
-    /** 
-   * setUser responds with an object of the [name]: value pairs that is saved as the user.
-   * This handle change is fired everytime the input box is manipulated by the user. 
-   */
   function handleChange(evt) {
     const { name, value } = evt.target;
     setLoginUser(data => ({ ...data, [name]: value }));
   }
 
-
   async function handleSubmit(evt) {
     evt.preventDefault();
 
-      let response = await axios.post("http://localhost:5000/auth/login", {
-        loginUser
-      });
-      response = response.data
-      console.log("This is the response", response)
+    let response = await axios.post("http://localhost:5000/auth/login", {
+      loginUser
+    });
+    response = response.data;
 
-      if(response.message == 'The username / password is incorrect'){
-        alert(response.message)
-        navigate("/auth/login")
-      }else{
-        sessionStorage.setItem("token", response.token)
-        alert(response.message)
-        navigate("/users");
-      }
-      
+    if (response.message === "The username / password is incorrect") {
+      alert(response.message);
+      navigate("/auth/login");
+    } else {
+      sessionStorage.setItem("token", response.token);
+      alert(response.message);
+      navigate("/users");
+    }
   }
 
-    return(
-        <div>
-        
-            <section>
-                <nav>
-                    <Link to="/"> Home </Link>
-                    <Link to="/auth/register"> Register </Link>
-                </nav>
-        
-                <h1> Kingdom Communit-E </h1>
-            </section>
-        
-            <h2> Enter the Kingdom </h2>
-        
-                
-            <section>
-            <form onSubmit={handleSubmit}>
-        
-                <label> Username </label>
-                <input 
-                    name = "username"
-                    value = {setLoginUser.username}
-                    onChange = {handleChange}
-                />
-        
-                <label> Password </label>
-                <input 
-                    type = "password"
-                    name = "userPassword"
-                    value = {setLoginUser.userPassword}
-                    onChange = {handleChange}
-                />
+  return (
+    <div>
+      <section>
+        <nav>
+          <Link to="/"> Home </Link>
+          <Link to="/auth/register"> Register </Link>
+        </nav>
+        <h1> Kingdom Communit-E </h1>
+      </section>
 
-                <button onSubmit={handleSubmit} >
-                  Login
-                </button>
-                
-            </form>
-            </section>
-        
-        
-        
-        
-            </div>
-    )
+      <h2> Enter the Kingdom </h2>
 
+      <section>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="username"> Username </label>
+          <input
+            id="username"
+            name="username"
+            value={loginUser.username || ""}
+            onChange={handleChange}
+          />
 
+          <label htmlFor="userPassword"> Password </label>
+          <input
+            id="userPassword"
+            type="password"
+            name="userPassword"
+            value={loginUser.userPassword || ""}
+            onChange={handleChange}
+          />
+
+          <button type="submit">Login</button>
+        </form>
+      </section>
+    </div>
+  );
 }
 
 export default LoginForm;

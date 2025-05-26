@@ -1,19 +1,19 @@
 import React from "react";
 import { Router, Routes, Route } from "react-router-dom";
-import Homepage from "../homepage/Homepage";
-import RegisterForm from "../auth/RegisterForm"
-import LoginForm from "../auth/LoginForm";
-import UserHomepage from "../users/UserHomepage";
-import EditUser from "../users/EditUser";
-import UsersFollowing from "../following-followers/Following";
-import UsersFollowers from "../following-followers/Followers";
-import CreatePost from "../users/createPost";
-import EditUserPics from "../users/EditUserPics";
-import UserFeed from "../feed/UsersFeed";
-import CommentPost from "../feed/CommentPost";
-import CommentEvent from "../feed/commentEvent";
-import CommentUrgentPost from "../feed/commentUrgentPost";
-import VisitingUsersHomepage from "../users/VisitingUserHomepage";
+import Homepage from "../homepage/Homepage.js";
+import RegisterForm from "../auth/RegisterForm.js"
+import LoginForm from "../auth/LoginForm.js";
+import UserHomepage from "../users/UserHomepage.js";
+import EditUser from "../users/EditUser.js";
+import UsersFollowing from "../following-followers/Following.js";
+import UsersFollowers from "../following-followers/Followers.js";
+import CreatePost from "../users/createPost.js";
+import EditUserPics from "../users/EditUserPics.js";
+import UserFeed from "../feed/UsersFeed.js";
+import CommentPost from "../feed/CommentPost.js";
+import CommentEvent from "../feed/commentEvent.js";
+import CommentUrgentPost from "../feed/commentUrgentPost.js";
+import VisitingUsersHomepage from "../users/VisitingUserHomepage.js";
 
 
 /**
