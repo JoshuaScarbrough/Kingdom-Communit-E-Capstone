@@ -1,3 +1,13 @@
+/**
+ * I handle all our event-related routes here.
+ * 
+ * I did some fixes while testing:
+ * 1. I fixed a bug in the DELETE route - it wasn't checking events right
+ * 2. I made the error messages match what the tests expect
+ * 3. I added return statements to avoid multiple responses
+ * 4. I cleaned up how we handle errors
+ */
+
 const express = require('express');
 const router = express.Router();
 const db = require('../db')
@@ -100,24 +110,21 @@ router.delete('/:id', async function (req, res, next){
     const data = jwt.verify(token, SECRET_KEY);
 
     try{
-
         if(data){
-
-            // Checks if post exsist
+            // I fixed this to properly check rows.length
             const event = await db.query(`SELECT * FROM events WHERE id = $1`, [eventId]);
-            if(event){
-
+            if(event.rows.length > 0){
                 const deletePost = await User.deleteEvent(eventId, data.id)
-                if(!deletePost){
-                     res.status(200).json({message: 'Event deleted Sucessfully', deletePost})
+                if(deletePost){
+                    // I fixed the response to match test expectations
+                    return res.status(200).json({message: 'Event deleted Sucessfully', deletePost})
                 }else{
-                    return res.status(404).json({message: "Event not Deleted"})
+                    return res.status(404).json({message: "Event not found"})
                 }
             }else{
                 return res.status(404).json({message: "Event not found"})
             }
         }
-
     }catch (e){
         next (e)
     }
