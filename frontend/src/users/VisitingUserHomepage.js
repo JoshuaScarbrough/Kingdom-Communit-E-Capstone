@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"
 import {jwtDecode} from "jwt-decode";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import styles from "./VisitingUserHomepage.module.css";
 
 
 function VisitingUsersHomepage(){
@@ -86,13 +87,14 @@ function VisitingUsersHomepage(){
         
                         // Only render if commentData exists.
                         return commentData ? (
-        
-                            <ul>
-                                <li key={commentItem.id}>
-                                User: {getCommentedUser()},
-                                Comment: {commentData},
-                                Date Posted: {commentDate},
-                                Time Posted: {commentTime}
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
                                 </li>
                             </ul>
                             ) : null;
@@ -148,24 +150,35 @@ function VisitingUsersHomepage(){
 
                                 navigate("/users/feed/commentPost", {state: postData})
                             }
-
-        
+                                        
                             return (
-                            <div key={post.id} className="post">
-                                <h6>{post.post}</h6>
-                                <button onClick={handleLikePost}> Like </button>
-                                <button onClick={handleCommentPost}> Comment </button>
-                                <p> Date Posted: {post.dateposted} </p>
-                                <p> Time Posted: {post.timeposted} </p>
-                                <p> Number of Likes: {post.numlikes} </p>
-                                <p> Number of Comments: {post.numcomments} </p>
-                                <h6>Comments:</h6>
+                                <div key={post.id} className="post">
+
+                                    <section className="post-section">   
+                                        <section>
+                                            <h2>Post</h2>
+                                            <h3>{post.post}</h3>
+                                            <button onClick={handleLikePost}> Like </button>
+                                            <button onClick={handleCommentPost}> Comment </button>
+                                        </section>
+
+                                        <section>
+                                            <p>Date Posted: {post.dateposted}</p>
+                                            <p>Time Posted: {post.timeposted}</p>
+                                        </section>
+
+                                        <section>
+                                            <p>Likes: {post.numlikes}</p>
+                                            <p>Comments: {post.numcomments}</p>
+                                        </section>
+                                    </section>
+                                    <h4>Comments</h4>
                                 {mappedComments.length > 0 ? (
                                     <ul>{mappedComments}</ul>
                                 ) : (
                                     <p>No comments available</p>
                                 )}
-                            </div>
+                                </div>
                             );
         
                         }
@@ -216,15 +229,17 @@ function VisitingUsersHomepage(){
                             
                         }    
         
+                        
                         // Only render if commentData exists.
                         return commentData ? (
-        
-                            <ul>
-                                <li key={commentItem.id}>
-                                User: {getCommentedUser()},
-                                Comment: {commentData},
-                                Date Posted: {commentDate},
-                                Time Posted: {commentTime}
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
                                 </li>
                             </ul>
                             ) : null;
@@ -298,25 +313,37 @@ function VisitingUsersHomepage(){
 
                                 navigate("/users/feed/commentEvent", {state: eventData})
                             }        
-        
+
                             return (
-                            <div key={event.id} className="post">
-                                <h6>{event.post}</h6>
-                                <button onClick={handleLikeEvent}> Like </button>
-                                <button onClick={handleCommentEvent}> Comment </button>
-                                <p> Location: {event.userlocation} </p>
-                                <button onClick={getDistanceFrom}> See Distance From </button>
-                                <p> Date Posted: {event.dateposted} </p>
-                                <p> Time Posted: {event.timeposted} </p>
-                                <p> Number of Likes: {event.numlikes} </p>
-                                <p> Number of Comments: {event.numcomments} </p>
-                                <h6>Comments:</h6>
+                                <div key={event.id} className="post">
+
+                                    <section className="post-section">   
+                                        <section>
+                                            <h2>Event</h2>
+                                            <h3>{event.post}</h3>
+                                            <button onClick={handleLikeEvent}> Like </button>
+                                            <button onClick={handleCommentEvent}> Comment </button>
+                                            <p> Event Location: {event.userlocation} </p>
+                                            <button onClick={getDistanceFrom}> See Distance From </button>
+                                        </section>
+
+                                        <section>
+                                            <p>Date Posted: {event.dateposted}</p>
+                                            <p>Time Posted: {event.timeposted}</p>
+                                        </section>
+
+                                        <section>
+                                            <p>Likes: {event.numlikes}</p>
+                                            <p>Comments: {event.numcomments}</p>
+                                        </section>
+                                    </section>
+                                    <h4>Comments</h4>
                                 {mappedComments.length > 0 ? (
                                     <ul>{mappedComments}</ul>
                                 ) : (
                                     <p>No comments available</p>
                                 )}
-                            </div>
+                                </div>
                             );
         
                         }
@@ -367,15 +394,17 @@ function VisitingUsersHomepage(){
                             
                         }    
         
+                       
                         // Only render if commentData exists.
                         return commentData ? (
-        
-                            <ul>
-                                <li key={commentItem.id}>
-                                User: {getCommentedUser()},
-                                Comment: {commentData},
-                                Date Posted: {commentDate},
-                                Time Posted: {commentTime}
+                            <ul className="comments-container">
+                                <li key={commentItem.id} className="comment">
+                                <div className="comment-header">User: {getCommentedUser()}</div>
+                                <div className="comment-body">Comment: {commentData}</div>
+                                <div className="comment-footer">
+                                    <span>Date Posted: {commentDate}</span>
+                                    <span>Time Posted: {commentTime}</span>
+                                </div>
                                 </li>
                             </ul>
                             ) : null;
@@ -433,22 +462,34 @@ function VisitingUsersHomepage(){
                             }
         
                             return (
-                            <div key={UrgentPost.id} className="post">
-                                <h6>{UrgentPost.post}</h6>
-                                <button onClick={handleCommentUrgentPost}> Comment </button>
-                                <p> Location: {UrgentPost.userlocation} </p>
-                                <button onClick={getDistanceFrom}> See Distance From </button>
-                                <p> Date Posted: {UrgentPost.dateposted} </p>
-                                <p> Time Posted: {UrgentPost.timeposted} </p>
-                                <p> Number of Comments: {UrgentPost.numcomments} </p>
-                                <h6>Comments:</h6>
-                                {mappedComments.length > 0 ? (
-                                    <ul>{mappedComments}</ul>
-                                ) : (
-                                    <p>No comments available</p>
-                                )}
-                            </div>
-                            );
+                                    <div key={UrgentPost.id} className="post">
+
+                                        <section className="post-section">   
+                                            <section>
+                                                <h2>Urgent Posts</h2>
+                                                <h3>{UrgentPost.post}</h3>
+                                                <button onClick={handleCommentUrgentPost}> Comment </button>
+                                                <p> Location: {UrgentPost.userlocation} </p>
+                                                <button onClick={getDistanceFrom}> See Distance From </button>
+                                            </section>
+
+                                            <section>
+                                                <p>Date Posted: {UrgentPost.dateposted}</p>
+                                                <p>Time Posted: {UrgentPost.timeposted}</p>
+                                            </section>
+
+                                            <section>
+                                                <p>Comments: {UrgentPost.numcomments}</p>
+                                            </section>
+                                        </section>
+                                        <h4>Comments</h4>
+                                    {mappedComments.length > 0 ? (
+                                        <ul>{mappedComments}</ul>
+                                    ) : (
+                                        <p>No comments available</p>
+                                    )}
+                                    </div>
+                                );
         
                         }
         
@@ -493,51 +534,75 @@ function VisitingUsersHomepage(){
     }
 
 
-    return(
-        <div>
+     return (
+        <div className={styles.feedPage}>
+        {/* Navigation Section */}
+        <section className={styles.navSection}>
+            <nav>
+            <h1>Kingdom Communit-E</h1>
+            <div className={styles.navLinks}>
+                <Link to="/">Logout</Link>
+                <Link to="/users">Homepage</Link>
+            </div>
+            </nav>
+        </section>
 
-            <section>
-                <nav>
-                    <h1> Kingdom Communit-E </h1>
-                    <Link to="/users/feed"> Feed </Link>
-                    <Link to="/users"> Homepage </Link>
-                    <Link to="/"> Logout </Link>
-                </nav>
-            </section>
+        <section>
+            <div className="cover-photo-container">
+                <img src={coverPhoto} alt="Cover Photo" className="cover-photo"></img>
+            </div>
 
-            <section>
-                <img src={coverPhoto} alt="Cover Photo" width="200" height="200"></img>
-                <h1> {username} </h1> 
-                <img src={profilePic} alt="Profile Picture" width="200" height="200"></img>
-                <h3> {distance} </h3>
-            </section>
+             <div className="user-section">
+                    <div className="user-info">
+                        <a href="/users/editPics">
+                        <img
+                            src={profilePic}
+                            alt="Profile Picture"
+                            className="profile-picture"
+                        />
+                        </a>
+                        <a href="/users/edit">
+                        <h1>{username}</h1>
+                        </a>
+                    </div>
 
-            <section>
-                <button onClick={visitUserFeed}> Back to Feed </button>
-                <button onClick={handleFollowUser}> Follow User </button>
-            </section>
+                    <section className="bio-section">
+                        <h4> User Bio: </h4>
+                        <p> {otherBio} </p>
+                        <p> {distance} </p>
+                    </section>
 
-            <section>
-                <h5> User Bio: </h5>
-                {otherBio}
-            </section>
+                    <section className="follow-section">
+                        <button onClick={handleFollowUser}> Follow </button>
+                        <button onClick={visitUserFeed}> Visit Feed </button>
+                    </section>
 
+                </div>
+        </section>
+
+        {/* User Posts Section */}
+        <section className={styles.userPostsSection}>
             <section>
-                <h5> {username} Posts </h5>
+            <div className={styles.postsContainer}>
+                <h2 className={styles.postsHeader}>{username}'s Posts</h2>
                 {posts}
+            </div>
             </section>
-
             <section>
-                <h5> {username} Events </h5>
+            <div className={styles.postsContainer}>
+                <h2 className={styles.postsHeader}>{username}'s Events</h2>
                 {events}
+            </div>
             </section>
-
             <section>
-                <h5> {username} Urgent Posts </h5>
+            <div className={styles.postsContainer}>
+                <h2 className={styles.postsHeader}>{username}'s Urgent Posts</h2>
                 {urgentPosts}
+            </div>
             </section>
+        </section>
         </div>
-    )
+    );
 }
 
 export default VisitingUsersHomepage
