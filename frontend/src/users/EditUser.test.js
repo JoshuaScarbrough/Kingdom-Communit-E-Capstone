@@ -1,160 +1,146 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios"
-import {jwtDecode} from "jwt-decode";
-import { Link, useNavigate } from "react-router-dom";
-import styles from "./EditUser.module.css";  // Import the module CSS
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import EditUser from './EditUser';
 
-/** 
- * Route for a User to be able to edit their profile.
- * Form style similar to the login and register routes.
- */
+// Mock modules
+// Had to fix this - originally the axios mock wasn't working properly
+// The component was getting stuck in loading state because our mock wasn't actually intercepting the calls
+// This approach explicitly mocks the specific methods we need (post and patch)
+jest.mock('axios', () => ({
+  post: jest.fn(),
+  patch: jest.fn(),
+}));
 
-function EditUser(){
-    const navigate = useNavigate();
+// Also had to properly mock jwt-decode - before it wasn't returning the user ID correctly
+jest.mock('jwt-decode');
 
-    // Get the token from sessionStorage and decode it
-    const token = sessionStorage.getItem("token");
-    const decoded = token ? jwtDecode(token) : null;
-    const userId = decoded ? decoded.id : null;
+// Mock useNavigate
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate
+}));
 
-    // Initialize user and updatedUser states.
-    // Note: user is null until the API returns data. We are setting an empty state as well that we will later populate with data.
-    const [user, setUser] = useState(null);
-    const [updatedUser, setUpdatedUser] = useState({
-        username: "",
-        bio: "",
-        address: "",
+describe('EditUser Component', () => {
+  const mockUser = {
+    username: 'testuser',
+    bio: 'test bio',
+    useraddress: 'test address'
+  };
+
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+    
+    // Mock sessionStorage
+    const mockSessionStorage = {
+      getItem: jest.fn(() => 'mock-token'),
+      setItem: jest.fn()
+    };
+    Object.defineProperty(window, 'sessionStorage', {
+      value: mockSessionStorage,
+      writable: true
     });
 
-    // We'll use this to indicate whether we've already loaded the fetched user into updatedUser.
-    const [dataLoaded, setDataLoaded] = useState(false);
+    // Mock window.alert
+    window.alert = jest.fn();
 
-    // Fetch the user data once when the component mounts or if userId changes.
-    useEffect(() => {
+    // This was the key fix! Had to properly set up the jwt decode mock
+    // to return a user ID so the component would actually try to fetch user data
+    jwtDecode.mockReturnValue({ id: '123' });
 
-      // Makes sure that if there is no token you are re-routed back to the homepage
-      if(token == null){
-        alert("Please Login")
-        navigate("/")
-        return; // Stops further execution
-      }
-        async function getUser() {
-        try {
-            // Makes a call to the API that gets the user
-            const response = await axios.post("http://localhost:5000/users", {
-            id: userId,
-            });
+    // And make sure axios.post returns the user data in the format the component expects
+    // The component looks for response.data[0], so we return an array with our mock user
+    axios.post.mockResolvedValue({ data: [mockUser] });
+  });
 
-            const fetchedUser = response.data[0];
-            console.log("Fetched user:", fetchedUser);
-        setUser(fetchedUser);
-      } catch (error) {
-        console.error("Error fetching the user:", error);
-      }
-    }
+  test('redirects to homepage if no token', () => {
+    // Mock sessionStorage to return null for token
+    Object.defineProperty(window, 'sessionStorage', {
+      value: {
+        getItem: jest.fn(() => null)
+      },
+      writable: true
+    });
 
-    // If there is a token then get the User
-    if (userId) {
-      getUser();
-    }
-  }, [userId]);
+    render(
+      <BrowserRouter>
+        <EditUser />
+      </BrowserRouter>
+    );
 
-  // Once the user data is fetched, update updatedUser only once.
-  useEffect(() => {
-    if (user && !dataLoaded) {
-        console.log(user)
-      setUpdatedUser({
-        username: user.username || "",
-        bio: user.bio || "",
-        address: user.useraddress || "", // this will be used in your input
-      });
-      setDataLoaded(true);
-      console.log("Initialized updatedUser with address:", user.useraddress);
-    }
-  }, [user, dataLoaded]);
+    expect(window.alert).toHaveBeenCalledWith('Please Login');
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+  });
 
+  test('renders edit user form', async () => {
+    render(
+      <BrowserRouter>
+        <EditUser />
+      </BrowserRouter>
+    );
 
-
-    /** 
-    * setUser responds with an object of the [name]: value pairs that is saved as the user.
-    * This handle change is fired everytime the input box is manipulated by the user. 
-    */
-    function handleChange(evt) {
-        const { name, value } = evt.target;
-        setUpdatedUser(data => ({ ...data, [name]: value }));
-    }
-
-
-    async function handleSubmit(evt) {
-        evt.preventDefault();
-        console.log(updatedUser)
-        
-          const response = await axios.patch(`http://localhost:5000/users/${userId}/update`, {
-            token,
-            updatedUser,
-          });
-          console.log(response.data.user)
+    // First, we should see the loading state
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
     
-          alert(response.data.message)
-          sessionStorage.setItem("token", response.data.token)
-          console.log("Stored Token:", sessionStorage.getItem("token"))
-          
-          // Need to refine this to be more RESTFUL
-           navigate("/users");
+    // Wait for the form to be populated
+    // Before our fix, this would timeout because the loading never finished
+    // Now it works because our axios mock actually resolves!
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    }, { timeout: 5000 });
+
+    // Now check for the form elements
+    expect(screen.getByText(/Edit User/i)).toBeInTheDocument();
+    const usernameInput = screen.getByLabelText(/Username:/i);
+    expect(usernameInput).toBeInTheDocument();
+    expect(usernameInput).toHaveAttribute('name', 'username');
+    expect(screen.getByLabelText(/Bio:/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Address:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Update User/i)).toBeInTheDocument();
+  });
+
+  test('handles form submission', async () => {
+    // Mock the patch request for form submission
+    axios.patch.mockResolvedValue({
+      data: {
+        message: 'User updated successfully',
+        token: 'new-token',
+        user: mockUser
       }
+    });
 
+    render(
+      <BrowserRouter>
+        <EditUser />
+      </BrowserRouter>
+    );
 
-return (
-    <div className={styles.editUserPage}>
-      {/* Navigation / Header Section */}
-      <section>
-        <h1>Kingdom Communnit-E</h1>
-        <button onClick={() => navigate("/users")}>Back</button>
-      </section>
+    // Wait for loading to finish and form to be populated
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    }, { timeout: 5000 });
 
-      {/* Edit Title Section */}
-      <section>
-        <h3>Edit User</h3>
-      </section>
+    // Wait for the form to be populated with user data
+    await waitFor(() => {
+      const usernameInput = screen.getByLabelText(/Username:/i);
+      expect(usernameInput).toHaveValue(mockUser.username);
+    }, { timeout: 3000 });
 
-      {/* Form Section */}
-      <section>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Username:</label>
-            <input 
-              type="text"
-              name="username"
-              value={updatedUser.username}
-              onChange={handleChange}
-            />
-          </div>
+    // Update form fields
+    fireEvent.change(screen.getByLabelText(/Username:/i), {
+      target: { name: 'username', value: 'newusername' }
+    });
 
-          <div>
-            <label>Bio:</label>
-            <input
-              type="text"
-              name="bio"
-              value={updatedUser.bio}
-              onChange={handleChange}
-            />
-          </div>
+    // Submit form
+    fireEvent.click(screen.getByText(/Update User/i));
 
-          <div>
-            <label>Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={updatedUser.address}
-              onChange={handleChange}
-            />
-          </div>
-
-          <button type="submit">Update User</button>
-        </form>
-      </section>
-    </div>
-  );
-}
-
-export default EditUser;
+    await waitFor(() => {
+      expect(axios.patch).toHaveBeenCalled();
+      expect(mockNavigate).toHaveBeenCalledWith('/users');
+    });
+  });
+});

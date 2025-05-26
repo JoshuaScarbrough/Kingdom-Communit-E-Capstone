@@ -1,15 +1,14 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
 import AllRoutes from "./routes-nav/Routes";
 import './App.css';
 
+// Super simple App component - just renders the routes
+// All the real action happens in the AllRoutes component
 function App() {
   return (
-      <BrowserRouter>
-
-        <AllRoutes />
-
-      </BrowserRouter>
+    <div className="App">
+      <AllRoutes />
+    </div>
   );
 }
 

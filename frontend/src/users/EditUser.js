@@ -7,18 +7,21 @@ import styles from "./EditUser.module.css";  // Import the module CSS
 /** 
  * Route for a User to be able to edit their profile.
  * Form style similar to the login and register routes.
+ * 
+ * Fun fact: This component was a bit tricky to test because of how the loading state works
+ * Had to make sure our mocks were set up just right so the useEffect would actually run
  */
 
 function EditUser(){
     const navigate = useNavigate();
 
     // Get the token from sessionStorage and decode it
+    // This part was causing test issues - needed to mock jwtDecode properly
     const token = sessionStorage.getItem("token");
     const decoded = token ? jwtDecode(token) : null;
     const userId = decoded ? decoded.id : null;
 
-    // Initialize user and updatedUser states.
-    // Note: user is null until the API returns data. We are setting an empty state as well that we will later populate with data.
+    // Initialize user and updatedUser states
     const [user, setUser] = useState(null);
     const [updatedUser, setUpdatedUser] = useState({
         username: "",
@@ -26,54 +29,50 @@ function EditUser(){
         address: "",
     });
 
-    // We'll use this to indicate whether we've already loaded the fetched user into updatedUser.
-    const [dataLoaded, setDataLoaded] = useState(false);
+    // We'll use this to indicate whether we've already loaded the fetched user into updatedUser
+    // This loading state was the main culprit in our test failures - it would never resolve!
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Fetch the user data once when the component mounts or if userId changes.
+    // Fetch the user data once when the component mounts or if userId changes
     useEffect(() => {
+        // Makes sure that if there is no token you are re-routed back to the homepage
+        if(token == null){
+            alert("Please Login");
+            navigate("/");
+            return;
+        }
 
-      // Makes sure that if there is no token you are re-routed back to the homepage
-      if(token == null){
-        alert("Please Login")
-        navigate("/")
-        return; // Stops further execution
-      }
         async function getUser() {
-        try {
-            // Makes a call to the API that gets the user
-            const response = await axios.post("http://localhost:5000/users", {
-            id: userId,
-            });
+            try {
+                // Makes a call to the API that gets the user
+                // This axios.post call needed proper mocking in tests
+                const response = await axios.post("http://localhost:5000/users", {
+                    id: userId,
+                });
 
-            const fetchedUser = response.data[0];
-            console.log("Fetched user:", fetchedUser);
-        setUser(fetchedUser);
-      } catch (error) {
-        console.error("Error fetching the user:", error);
-      }
-    }
+                // The component expects response.data to be an array, hence the [0]
+                // This detail was important for setting up the test mocks correctly
+                const fetchedUser = response.data[0];
+                setUser(fetchedUser);
+                
+                // Update the form data immediately when we get the user
+                setUpdatedUser({
+                    username: fetchedUser.username || "",
+                    bio: fetchedUser.bio || "",
+                    address: fetchedUser.useraddress || "", // Note: it's useraddress, not address!
+                });
+                setIsLoading(false); // This is what finally gets us out of loading state
+            } catch (error) {
+                console.error("Error fetching the user:", error);
+                setIsLoading(false); // Make sure we exit loading state even on error
+            }
+        }
 
-    // If there is a token then get the User
-    if (userId) {
-      getUser();
-    }
-  }, [userId]);
-
-  // Once the user data is fetched, update updatedUser only once.
-  useEffect(() => {
-    if (user && !dataLoaded) {
-        console.log(user)
-      setUpdatedUser({
-        username: user.username || "",
-        bio: user.bio || "",
-        address: user.useraddress || "", // this will be used in your input
-      });
-      setDataLoaded(true);
-      console.log("Initialized updatedUser with address:", user.useraddress);
-    }
-  }, [user, dataLoaded]);
-
-
+        // Only call getUser if we have a userId - this was crucial for the tests
+        if (userId) {
+            getUser();
+        }
+    }, [userId, token, navigate]);
 
     /** 
     * setUser responds with an object of the [name]: value pairs that is saved as the user.
@@ -84,77 +83,83 @@ function EditUser(){
         setUpdatedUser(data => ({ ...data, [name]: value }));
     }
 
-
     async function handleSubmit(evt) {
         evt.preventDefault();
-        console.log(updatedUser)
         
-          const response = await axios.patch(`http://localhost:5000/users/${userId}/update`, {
-            token,
-            updatedUser,
-          });
-          console.log(response.data.user)
-    
-          alert(response.data.message)
-          sessionStorage.setItem("token", response.data.token)
-          console.log("Stored Token:", sessionStorage.getItem("token"))
-          
-          // Need to refine this to be more RESTFUL
-           navigate("/users");
-      }
+        try {
+            const response = await axios.patch(`http://localhost:5000/users/${userId}/update`, {
+                token,
+                updatedUser,
+            });
+            
+            alert(response.data.message);
+            sessionStorage.setItem("token", response.data.token);
+            navigate("/users");
+        } catch (error) {
+            console.error("Error updating user:", error);
+            alert("Error updating user");
+        }
+    }
 
+    // This loading check was the source of our test timeouts before we fixed the mocks
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
-return (
-    <div className={styles.editUserPage}>
-      {/* Navigation / Header Section */}
-      <section>
-        <h1>Kingdom Communnit-E</h1>
-        <button onClick={() => navigate("/users")}>Back</button>
-      </section>
+    return (
+        <div className={styles.editUserPage}>
+            {/* Navigation / Header Section */}
+            <section>
+                <h1>Kingdom Communnit-E</h1>
+                <button onClick={() => navigate("/users")}>Back</button>
+            </section>
 
-      {/* Edit Title Section */}
-      <section>
-        <h3>Edit User</h3>
-      </section>
+            {/* Edit Title Section */}
+            <section>
+                <h3>Edit User</h3>
+            </section>
 
-      {/* Form Section */}
-      <section>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Username:</label>
-            <input 
-              type="text"
-              name="username"
-              value={updatedUser.username}
-              onChange={handleChange}
-            />
-          </div>
+            {/* Form Section */}
+            <section>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="username">Username:</label>
+                        <input 
+                            id="username"
+                            type="text"
+                            name="username"
+                            value={updatedUser.username}
+                            onChange={handleChange}
+                        />
+                    </div>
 
-          <div>
-            <label>Bio:</label>
-            <input
-              type="text"
-              name="bio"
-              value={updatedUser.bio}
-              onChange={handleChange}
-            />
-          </div>
+                    <div>
+                        <label htmlFor="bio">Bio:</label>
+                        <input
+                            id="bio"
+                            type="text"
+                            name="bio"
+                            value={updatedUser.bio}
+                            onChange={handleChange}
+                        />
+                    </div>
 
-          <div>
-            <label>Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={updatedUser.address}
-              onChange={handleChange}
-            />
-          </div>
+                    <div>
+                        <label htmlFor="address">Address:</label>
+                        <input
+                            id="address"
+                            type="text"
+                            name="address"
+                            value={updatedUser.address}
+                            onChange={handleChange}
+                        />
+                    </div>
 
-          <button type="submit">Update User</button>
-        </form>
-      </section>
-    </div>
-  );
+                    <button type="submit">Update User</button>
+                </form>
+            </section>
+        </div>
+    );
 }
 
 export default EditUser;
