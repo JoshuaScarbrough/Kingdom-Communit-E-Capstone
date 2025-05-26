@@ -143,14 +143,28 @@ function UserHomepage() {
 
                 return(listOfUsername)
                 }
+
+                async function visitUserHomepage(evt){
+                    evt.preventDefault();
+                    const otherId = commentUserId
+
+                    let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                            token,
+                            otherId
+                    })
+                    response = response.data
+
+                    navigate("/users/VisitUser", {state: response})
+                    }
+                
         
 
                 // Only render if commentData exists.
                 return commentData ? (
                     <ul className="comments-container">
                         <li key={commentItem.id} className="comment">
-                        <div className="comment-header">User: {getCommentedUser()}</div>
                         <div className="comment-body">Comment: {commentData}</div>
+                        <button onClick={visitUserHomepage}>Visit User Homepage</button>
                         <div className="comment-footer">
                             <span>Date Posted: {commentDate}</span>
                             <span>Time Posted: {commentTime}</span>
@@ -248,19 +262,34 @@ function UserHomepage() {
                         return(commentUserUsername)
                         }
 
-                        // Only render if commentData exists.
-                        return commentData ? (
-                            <ul className="comments-container">
-                                <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
-                                <div className="comment-body">Comment: {commentData}</div>
-                                <div className="comment-footer">
-                                    <span>Date Posted: {commentDate}</span>
-                                    <span>Time Posted: {commentTime}</span>
-                                </div>
-                                </li>
-                            </ul>
-                            ) : null;
+                async function visitUserHomepage(evt){
+                    evt.preventDefault();
+                    const otherId = commentUserId
+
+                    let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                            token,
+                            otherId
+                    })
+                    response = response.data
+
+                    navigate("/users/VisitUser", {state: response})
+                    }
+                
+        
+
+                // Only render if commentData exists.
+                return commentData ? (
+                    <ul className="comments-container">
+                        <li key={commentItem.id} className="comment">
+                        <div className="comment-body">Comment: {commentData}</div>
+                        <button onClick={visitUserHomepage}>Visit User Homepage</button>
+                        <div className="comment-footer">
+                            <span>Date Posted: {commentDate}</span>
+                            <span>Time Posted: {commentTime}</span>
+                        </div>
+                        </li>
+                    </ul>
+                    ) : null;       
                         });
                         
                         // This is so that when you click the button to see the post you can pull it up
@@ -354,19 +383,35 @@ function UserHomepage() {
                             return(commentUserUsername)
                                 }
         
-                                // Only render if commentData exists.
-                                return commentData ? (
-                                    <ul className="comments-container">
-                                        <li key={commentItem.id} className="comment">
-                                        <div className="comment-header">User: {getCommentedUser()}</div>
-                                        <div className="comment-body">Comment: {commentData}</div>
-                                        <div className="comment-footer">
-                                            <span>Date Posted: {commentDate}</span>
-                                            <span>Time Posted: {commentTime}</span>
-                                        </div>
-                                        </li>
-                                    </ul>
-                                    ) : null;
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
+        
+
+                            // Only render if commentData exists.
+                            return commentData ? (
+                                <ul className="comments-container">
+                                    <li key={commentItem.id} className="comment">
+                                    <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
+                                    <div className="comment-footer">
+                                        <span>Date Posted: {commentDate}</span>
+                                        <span>Time Posted: {commentTime}</span>
+                                    </div>
+                                    </li>
+                                </ul>
+                                ) : null;
+                                
                                 });
 
                                  // This is so that when you click the button to see the post you can pull it up
@@ -455,20 +500,36 @@ function UserHomepage() {
         
                                 return(commentUserUsername)
                             }
+       
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
         
+
                             // Only render if commentData exists.
                             return commentData ? (
                                 <ul className="comments-container">
                                     <li key={commentItem.id} className="comment">
-                                    <div className="comment-header">User: {getCommentedUser()}</div>
                                     <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
                                     <div className="comment-footer">
                                         <span>Date Posted: {commentDate}</span>
                                         <span>Time Posted: {commentTime}</span>
                                     </div>
                                     </li>
                                 </ul>
-                            ) : null;
+                                ) : null;
+
                             });
 
                             // This is so that you can remove a post from your liked Posts
@@ -504,6 +565,19 @@ function UserHomepage() {
                                 navigate("/users/feed/commentPost", {state: postData})
                             }
 
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = post.user_id
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                    token,
+                                    otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+
                             if(post.id){
                                 const userId = post.user_id
                                 // Async function to get the user for their posts
@@ -522,8 +596,9 @@ function UserHomepage() {
                             
                             return (
                                 <div key={post.id} className="likedPost">
-                                    <h3>{getPostUser()} Post</h3>
+                                    <h3> Post</h3>
                                     <h5>{post.post}</h5>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
                                     <div className="button-group">
                                     <button onClick={handleUnlikePost}>Unlike</button>
                                     <button onClick={handleCommentPost}>Comment</button>
@@ -580,19 +655,35 @@ function UserHomepage() {
                                 return(commentUserUsername)
                             }
         
-                           // Only render if commentData exists.
+                                 
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
+        
+
+                            // Only render if commentData exists.
                             return commentData ? (
                                 <ul className="comments-container">
                                     <li key={commentItem.id} className="comment">
-                                    <div className="comment-header">User: {getCommentedUser()}</div>
                                     <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
                                     <div className="comment-footer">
                                         <span>Date Posted: {commentDate}</span>
                                         <span>Time Posted: {commentTime}</span>
                                     </div>
                                     </li>
                                 </ul>
-                            ) : null;
+                                ) : null;
                             });
 
                             // Get distance from Event
@@ -645,7 +736,8 @@ function UserHomepage() {
                                 const eventData = response.data
 
                                 navigate("/users/feed/commentEvent", {state: eventData})
-                            }        
+                            }
+
 
                             if(event.id){
                                 const userId = event.user_id
@@ -663,10 +755,24 @@ function UserHomepage() {
                                 return(username)
                                 }
 
+                                async function visitUserHomepage(evt){
+                                    evt.preventDefault();
+                                    const otherId = event.user_id
+
+                                    let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                    })
+                                    response = response.data
+
+                                    navigate("/users/VisitUser", {state: response})
+                                }
+
                                 return (
                                 <div key={event.id} className="likedPost">
-                                    <h3>{getEventUser()} Post</h3>
+                                    <h3>Post</h3>
                                     <h5>{event.post}</h5>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
                                     <div className="button-group">
                                     <button onClick={handleUnlikeEvent}>Unlike</button>
                                     <button onClick={handleCommentEvent}>Comment</button>

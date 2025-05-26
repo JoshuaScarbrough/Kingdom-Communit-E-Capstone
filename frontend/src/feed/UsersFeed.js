@@ -117,19 +117,36 @@ function UserFeed(){
                     }
 
                 
-                    // Only render if commentData exists.
-                    return commentData ? (
-                            <ul className="comments-container">
-                                <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
-                                <div className="comment-body">Comment: {commentData}</div>
-                                <div className="comment-footer">
-                                    <span>Date Posted: {commentDate}</span>
-                                    <span>Time Posted: {commentTime}</span>
-                                </div>
-                                </li>
-                            </ul>
-                            ) : null;      
+     
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
+        
+
+                            // Only render if commentData exists.
+                            return commentData ? (
+                                <ul className="comments-container">
+                                    <li key={commentItem.id} className="comment">
+                                    <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
+                                    <div className="comment-footer">
+                                        <span>Date Posted: {commentDate}</span>
+                                        <span>Time Posted: {commentTime}</span>
+                                    </div>
+                                    </li>
+                                </ul>
+                                ) : null;
+           
                     });
                 
 
@@ -201,7 +218,7 @@ function UserFeed(){
 
                                 <section className="post-section">   
                                     <section>
-                                        <h2>{getPostUser()} Post</h2>
+                                        <h2> Post</h2>
                                         <button onClick={visitUserHomepage}> Visit User </button>
                                         <h3>{post.post}</h3>
                                         <button onClick={handleLikePost}> Like </button>
@@ -275,19 +292,36 @@ function UserFeed(){
                     
                     }
 
-                    // Only render if commentData exists.
-                    return commentData ? (
-                            <ul className="comments-container">
-                                <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
-                                <div className="comment-body">Comment: {commentData}</div>
-                                <div className="comment-footer">
-                                    <span>Date Posted: {commentDate}</span>
-                                    <span>Time Posted: {commentTime}</span>
-                                </div>
-                                </li>
-                            </ul>
-                            ) : null;
+                         
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
+        
+
+                            // Only render if commentData exists.
+                            return commentData ? (
+                                <ul className="comments-container">
+                                    <li key={commentItem.id} className="comment">
+                                    <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
+                                    <div className="comment-footer">
+                                        <span>Date Posted: {commentDate}</span>
+                                        <span>Time Posted: {commentTime}</span>
+                                    </div>
+                                    </li>
+                                </ul>
+                                ) : null;
+                            
                     });
 
                     if(event.id){
@@ -378,7 +412,7 @@ function UserFeed(){
 
                                 <section className="post-section">   
                                     <section>
-                                        <h2>{getEventUser()} Event</h2>
+                                        <h2> Event</h2>
                                         <h3>{event.post}</h3>
                                         <button onClick={visitUserHomepage}> Visit User </button>
                                         <h4> {event.userlocation} </h4>
@@ -454,20 +488,36 @@ function UserFeed(){
                     
                     }
 
-                    // Only render if commentData exists.
-                    return commentData ? (
-                            <ul className="comments-container">
-                                <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
-                                <div className="comment-body">Comment: {commentData}</div>
-                                <div className="comment-footer">
-                                    <span>Date Posted: {commentDate}</span>
-                                    <span>Time Posted: {commentTime}</span>
-                                </div>
-                                </li>
-                            </ul>
-                            ) : null;
-                    });
+                         
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
+        
+
+                            // Only render if commentData exists.
+                            return commentData ? (
+                                <ul className="comments-container">
+                                    <li key={commentItem.id} className="comment">
+                                    <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
+                                    <div className="comment-footer">
+                                        <span>Date Posted: {commentDate}</span>
+                                        <span>Time Posted: {commentTime}</span>
+                                    </div>
+                                    </li>
+                                </ul>
+                                ) : null;
+                            });
 
                     if(UrgentPost.id){
                         const userId = UrgentPost.user_id
@@ -540,7 +590,7 @@ function UserFeed(){
 
                                 <section className="post-section">   
                                     <section>
-                                        <h2>{getUrgentPostUser()} Event</h2>
+                                        <h2> Urgent Post </h2>
                                         <h3>{UrgentPost.post}</h3>
                                         <button onClick={visitUserHomepage}> Visit User </button>
                                         <h4> {UrgentPost.userlocation} </h4>
@@ -613,21 +663,36 @@ function UserFeed(){
                     }
                     
                     }
+     
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
 
-                    // Only render if commentData exists.
-                    return commentData ? (
-                            <ul className="comments-container">
-                                <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
-                                <div className="comment-body">Comment: {commentData}</div>
-                                <div className="comment-footer">
-                                    <span>Date Posted: {commentDate}</span>
-                                    <span>Time Posted: {commentTime}</span>
-                                </div>
-                                </li>
-                            </ul>
-                            ) : null;
-                    });
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
+        
+
+                            // Only render if commentData exists.
+                            return commentData ? (
+                                <ul className="comments-container">
+                                    <li key={commentItem.id} className="comment">
+                                    <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
+                                    <div className="comment-footer">
+                                        <span>Date Posted: {commentDate}</span>
+                                        <span>Time Posted: {commentTime}</span>
+                                    </div>
+                                    </li>
+                                </ul>
+                                ) : null;
+                            });
 
                     if(post.id){
                         const userId = post.user_id
@@ -700,7 +765,7 @@ function UserFeed(){
 
                                 <section className="post-section">   
                                     <section>
-                                        <h2>{getPostUser()} Post</h2>
+                                        <h2> Post</h2>
                                         <h3>{post.post}</h3>
                                         <button onClick={visitUserHomepage}> Visit User </button>
                                         <button onClick={handleLikePost}> Like </button>
@@ -773,20 +838,36 @@ function UserFeed(){
                     
                     }
 
-                    // Only render if commentData exists.
-                    return commentData ? (
-                            <ul className="comments-container">
-                                <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
-                                <div className="comment-body">Comment: {commentData}</div>
-                                <div className="comment-footer">
-                                    <span>Date Posted: {commentDate}</span>
-                                    <span>Time Posted: {commentTime}</span>
-                                </div>
-                                </li>
-                            </ul>
-                            ) : null;// Only render if commentData exists.       
-                    });
+                       
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
+        
+
+                            // Only render if commentData exists.
+                            return commentData ? (
+                                <ul className="comments-container">
+                                    <li key={commentItem.id} className="comment">
+                                    <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
+                                    <div className="comment-footer">
+                                        <span>Date Posted: {commentDate}</span>
+                                        <span>Time Posted: {commentTime}</span>
+                                    </div>
+                                    </li>
+                                </ul>
+                                ) : null;
+                            });
 
                     if(event.id){
                         const userId = event.user_id
@@ -876,7 +957,7 @@ function UserFeed(){
 
                                 <section className="post-section">   
                                     <section>
-                                        <h2>{getEventUser()} Event</h2>
+                                        <h2> Event</h2>
                                         <h3>{event.post}</h3>
                                         <button onClick={visitUserHomepage}> Visit User </button>
                                         <h4> {event.userlocation} </h4>
@@ -951,20 +1032,36 @@ function UserFeed(){
                     
                     }
 
-                    // Only render if commentData exists.
-                    return commentData ? (
-                            <ul className="comments-container">
-                                <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
-                                <div className="comment-body">Comment: {commentData}</div>
-                                <div className="comment-footer">
-                                    <span>Date Posted: {commentDate}</span>
-                                    <span>Time Posted: {commentTime}</span>
-                                </div>
-                                </li>
-                            </ul>
-                            ) : null;
-                    });
+                        
+                            async function visitUserHomepage(evt){
+                                evt.preventDefault();
+                                const otherId = commentUserId
+
+                                let response = await axios.post(`http://localhost:5000/follow/${userId}/view/${otherId}`, {
+                                        token,
+                                        otherId
+                                })
+                                response = response.data
+
+                                navigate("/users/VisitUser", {state: response})
+                            }
+                            
+        
+
+                            // Only render if commentData exists.
+                            return commentData ? (
+                                <ul className="comments-container">
+                                    <li key={commentItem.id} className="comment">
+                                    <div className="comment-body">Comment: {commentData}</div>
+                                    <button onClick={visitUserHomepage}>Visit User Homepage</button>
+                                    <div className="comment-footer">
+                                        <span>Date Posted: {commentDate}</span>
+                                        <span>Time Posted: {commentTime}</span>
+                                    </div>
+                                    </li>
+                                </ul>
+                                ) : null;
+                            });
 
                     if(UrgentPost.id){
                         const userId = UrgentPost.user_id
@@ -1035,7 +1132,7 @@ function UserFeed(){
 
                                 <section className="post-section">   
                                     <section>
-                                        <h2>{getUrgentPostUser()} Event</h2>
+                                        <h2> Urgent Post </h2>
                                         <h3>{UrgentPost.post}</h3>
                                         <button onClick={visitUserHomepage}> Visit User </button>
                                         <h4> {UrgentPost.userlocation} </h4>

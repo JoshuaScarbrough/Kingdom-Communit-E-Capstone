@@ -89,7 +89,6 @@ function VisitingUsersHomepage(){
                         return commentData ? (
                             <ul className="comments-container">
                                 <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
                                 <div className="comment-body">Comment: {commentData}</div>
                                 <div className="comment-footer">
                                     <span>Date Posted: {commentDate}</span>
@@ -234,7 +233,6 @@ function VisitingUsersHomepage(){
                         return commentData ? (
                             <ul className="comments-container">
                                 <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
                                 <div className="comment-body">Comment: {commentData}</div>
                                 <div className="comment-footer">
                                     <span>Date Posted: {commentDate}</span>
@@ -399,7 +397,6 @@ function VisitingUsersHomepage(){
                         return commentData ? (
                             <ul className="comments-container">
                                 <li key={commentItem.id} className="comment">
-                                <div className="comment-header">User: {getCommentedUser()}</div>
                                 <div className="comment-body">Comment: {commentData}</div>
                                 <div className="comment-footer">
                                     <span>Date Posted: {commentDate}</span>
