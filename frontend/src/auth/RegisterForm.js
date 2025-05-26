@@ -19,7 +19,7 @@ function RegisterForm(){
     sessionStorage.clear()
 
     // This is the user peice of state that updates
-    const [user, setUser] = useState("");
+    const [user, setUser] = useState({});
 
   /** 
    * setUser responds with an object of the [name]: value pairs that is saved as the user.
@@ -70,32 +70,32 @@ function RegisterForm(){
         <section>
         <form onSubmit={handleSubmit}>
 
-            <label> Set Username </label>
+           <label htmlFor="username"> Set Username </label>
             <input 
-                name = "username"
-                value = {setUser.username}
-                onChange = {handleChange}
+              id="username"
+              name="username"
+              value={user.username || ""}
+              onChange={handleChange}
             />
 
-            <label> Set Password </label>
+            <label htmlFor="userPassword"> Set Password </label>
             <input 
-                type = "password"
-                name = "userPassword"
-                value = {setUser.userPassword}
-                onChange = {handleChange}
+              type="password"
+              id="userPassword"
+              name="userPassword"
+              value={user.userPassword || ""}
+              onChange={handleChange}
             />
 
-            <label> Set Address </label>
+            <label htmlFor="userAddress"> Set Address </label>
             <input 
-                name = "userAddress"
-                value = {setUser.userAddress}
-                onChange = {handleChange}
-            />
-
-            <button onSubmit={handleSubmit} >
-            Register
-            </button>
+              id="userAddress"
+              name="userAddress"
+              value={user.userAddress || ""}
+              onChange={handleChange}
+            /> 
         
+            <button type="submit">Register</button>
         </form>
         </section>
 

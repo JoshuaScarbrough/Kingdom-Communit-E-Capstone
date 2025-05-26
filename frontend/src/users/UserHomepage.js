@@ -179,8 +179,6 @@ function UserHomepage() {
                       }
                 }
 
-                console.log(post.imageurl)
-
                 return (
                     <div key={post.id} className="post">
 

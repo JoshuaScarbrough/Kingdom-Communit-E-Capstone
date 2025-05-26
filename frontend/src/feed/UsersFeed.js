@@ -9,7 +9,7 @@ function UserFeed(){
     
         // The different pieces of (User)state that are used to handle the different peices of data that are on the page.
         const [username, setUsername] = useState(null);
-        const [profilePic, setProfilePic] = useState(null);
+        const [profilePic, setProfilePic] = useState(null);;
 
         // The different pieces of (Post)state that are used to handle the different peices of data that are on the page. These are going to be a part of the feed (feed) posts
         const [posts, setPosts] = useState(null);
@@ -21,9 +21,8 @@ function UserFeed(){
         const [followingEvent, setFollowingEvent] = useState(null);
         const [followingUrgentPost, setFollowingUrgentPost] = useState(null);
 
-        // State to toggle the display of the user posts section (posts, events, urgent posts)
+        // State to toggle the display of the user posts section (posts, events, urgent posts) and the following posts
         const [showUserPosts, setShowUserPosts] = useState(false);
-        
         const [showFollowingPosts, setShowFollowingPosts] = useState(false);
 
         // The token is grabbed out of the sessionStorage, then decoded and the userId is grabbed out to put into the parameter string for the api request
@@ -99,26 +98,25 @@ function UserFeed(){
 
 
                     // Async Function to get a user for their comments
-                    const getCommentedUser = async () => {
-                    // This gets the commenters username
-                    let commentUser = await axios.post(`http://localhost:5000/users`, {
-                        id:commentUserId
-                    })
-    
-                    commentUser = commentUser.data
-                    commentUser = commentUser[0]
-                    
+                    let getCommentedUser = async () => {
+                        // This gets the commenters username
+                        let commentUser = await axios.post(`http://localhost:5000/users`, {
+                            id:commentUserId
+                        })
+        
+                        commentUser = commentUser.data
+                        commentUser = commentUser[0]
+                        
 
-                    if(commentUser){
-                        const commentUserUsername = commentUser.username
-    
-                        return(commentUserUsername)
-                    }else{
-                        console.log("Houston we have a problem")
-                    }
-                    
+                        if(commentUser){
+                            const commentUserUsername = commentUser.username
+                            return(commentUserUsername)
+                        }else{
+                            console.log("Houston we have a problem")
+                        }
                     }
 
+                
                     // Only render if commentData exists.
                     return commentData ? (
                             <ul className="comments-container">
@@ -131,8 +129,9 @@ function UserFeed(){
                                 </div>
                                 </li>
                             </ul>
-                            ) : null;
+                            ) : null;      
                     });
+                
 
                     if(post.id){
                         const userId = post.user_id
