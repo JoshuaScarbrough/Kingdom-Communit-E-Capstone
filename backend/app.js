@@ -46,10 +46,11 @@ app.get('/', (req, res) => {
     return res.send('Kingdom Communit-E Homepage!!')
 })
 
-if (process.env.NODE_ENV !== 'test'){
-    app.listen(5000, function () {
-    console.log('Server running on port 5000')
-    });
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, function () {
+    console.log(`Server running on port ${PORT}`);
+  });
 }
 
 app.use((err, req, res, next) => {
