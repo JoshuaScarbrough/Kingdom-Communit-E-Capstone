@@ -26,5 +26,4 @@ Let’s give you an example of what a site could look like. Say you want to make
 2. Google maps distance API url: https://developers.google.com/maps/documentation/distance-matrix/distance-matrix
 - This is needed so when a user post a Post, Event, or Message the API will calculate the distance between the location of the user and the destination. If users are within a certian mile radius a notification will be sent out.
 
-3. Affirmations API url: https://www.freepublicapis.com/affirmation-generator-api
-- This will be used to give an encouraging message when a user logs into the website.
+Deployed Site at: https://kingdom-communit-e-frontend.onrender.com
