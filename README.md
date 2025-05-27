@@ -27,3 +27,7 @@ Let’s give you an example of what a site could look like. Say you want to make
 - This is needed so when a user post a Post, Event, or Message the API will calculate the distance between the location of the user and the destination. If users are within a certian mile radius a notification will be sent out.
 
 Deployed Site at: https://kingdom-communit-e-frontend.onrender.com
+
+Kingdom Communit-E App overview: Hello and thank you for inquiring about my app. Kingdom Communit-E is a website that allows users to create connections with others by making an account and connecting with other users on the platform. The site is similar to your everyday social media platform but with a twist... The website uses an API to help users see the distance between them and other people who use the app. The goal of this is to increase hangouts and meetups when you see the person you are interacting with is right around the corner. The site also calculates the distance between various events and posts as well. The app also has a feature for a user to create an urgent post where they can detial a problem they are having and people can come and help the need. 
+
+This application was created using Node with express as my backend. The test are written using Jest. The application frontend is created using React with styling using css. The test for the frontend are also written using Jest. 
