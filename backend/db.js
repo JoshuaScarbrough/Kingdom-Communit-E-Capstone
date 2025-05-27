@@ -15,10 +15,11 @@ const { Client } = require("pg");
 let DB_URI;
 
 // I picked the right database based on what we're doing
+// "postgresql://postgres:password@localhost:5432/capstone2"
 if (process.env.NODE_ENV === "test"){
     DB_URI = "postgresql://postgres:password@localhost:5432/capstone2_test";
 } else {
-    DB_URI = "postgresql://postgres:password@localhost:5432/capstone2"
+    DB_URI = "postgresql://postgres.mlqzpjcyorxhfiurzirb:password@aws-0-us-east-2.pooler.supabase.com:6543/postgres"
 }
 
 // I set up our database client
