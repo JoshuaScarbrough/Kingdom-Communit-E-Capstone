@@ -43,5 +43,9 @@ Installation:
 - Install the latest version of Node. Version thats installed (v22.14.0)
 - Use npm to install
 - Relational database used PostgreSQL
-- Step 1: Clone the Repo
-- Step 2: Install backend dependecies 
+- Step 1: Clone the Repo (https://github.com/JoshuaScarbrough/Kingdom-Communit-E-Capstone.git)
+- Step 2: Install backend dependecies. Dependecies must be installed in the directory with the package.json (npm install)
+- Step 3: Set your environment variables. Create a .env file!
+- Step 4: Start your express backend ( node app.js) Stop your express backend (Ctrl + c)
+- Step 5: Install frontend dependecies. Dependecies must be installed in the directory with the package.json (npm install)
+- Step 6: Start the frontend app (npm start)
