@@ -46,6 +46,7 @@ Installation:
 - Step 1: Clone the Repo (https://github.com/JoshuaScarbrough/Kingdom-Communit-E-Capstone.git)
 - Step 2: Install backend dependecies. Dependecies must be installed in the directory with the package.json (npm install)
 - Step 3: Set your environment variables. Create a .env file!
+- Step 4: Make sure that when using PostgreSQL you have your database created and that you seed the database with the schema and data.
 - Step 4: Start your express backend ( node app.js) Stop your express backend (Ctrl + c)
 - Step 5: Install frontend dependecies. Dependecies must be installed in the directory with the package.json (npm install)
 - Step 6: Start the frontend app (npm start)
