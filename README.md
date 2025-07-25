@@ -28,6 +28,20 @@ Let’s give you an example of what a site could look like. Say you want to make
 
 Deployed Site at: https://kingdom-communit-e-frontend.onrender.com
 
-Kingdom Communit-E App overview: Hello and thank you for inquiring about my app. Kingdom Communit-E is a website that allows users to create connections with others by making an account and connecting with other users on the platform. The site is similar to your everyday social media platform but with a twist... The website uses an API to help users see the distance between them and other people who use the app. The goal of this is to increase hangouts and meetups when you see the person you are interacting with is right around the corner. The site also calculates the distance between various events and posts as well. The app also has a feature for a user to create an urgent post where they can detial a problem they are having and people can come and help the need. 
+Kingdom Communit-E App overview: Thank you for your interest in Kingdom Communit-E — a social networking platform designed to foster real-world connections within local communities.
 
-This application was created using Node with express as my backend. The test are written using Jest. The application frontend is created using React with styling using css. The test for the frontend are also written using Jest. 
+Unlike typical social media platforms, Kingdom Communit-E encourages in-person interaction by leveraging a location-based API that displays the distance between users. This unique feature helps users see how close they are to others on the platform, making it easier to arrange meetups and spontaneous hangouts.
+
+In addition to user proximity, the platform also calculates and displays the distance between users and various events or posts. One of the key features of the app is the "Urgent Post" option, allowing users to share immediate needs or issues. Other members of the community can then respond and offer assistance — supporting a culture of local help and responsiveness.
+
+Tech Stack: 
+* Backend: Node.js with Express
+* Frontend: React.js with CSS styling
+* Testing: Jest (Both frontend and backend)
+
+Installation: 
+- Install the latest version of Node. Version thats installed (v22.14.0)
+- Use npm to install
+- Relational database used PostgreSQL
+- Step 1: Clone the Repo
+- Step 2: Install backend dependecies 
